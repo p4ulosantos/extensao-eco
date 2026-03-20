@@ -1,344 +1,542 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Cálculo ECO</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <!-- Abas -->
-  <div class="tabs">
-    <img src="logo.png" alt="Logo" class="logo">
-    <button class="tab active" data-tab="calculo">Cálculo ECO</button>
-    <button class="tab" data-tab="laudo">Laudo ECO</button>
-    <button id="btnLimparTudoTopo" class="tab-limpar-tudo">🗑️ Limpar Tudo</button>
-  </div>
-
-  <!-- ==================== ABA CÁLCULO ECO ==================== -->
-  <div id="tab-calculo" class="tab-content active">
-    <!-- Peso / Altura / SC -->
-    <div class="header-row body-row">
-      <div class="header-group">
-        <label>Peso:</label>
-        <input type="number" id="peso" step="0.01" class="input-sm">
-        <span class="unit">Kg</span>
-      </div>
-      <div class="header-group">
-        <label>Altura:</label>
-        <input type="number" id="altura" step="0.01" class="input-sm">
-        <span class="unit">m</span>
-      </div>
-      <div class="header-group">
-        <label><b>Superfície Corpórea:</b></label>
-        <input type="text" id="bsa" class="input-sm calculated" readonly>
-        <span class="unit">m2</span>
-      </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cálculo ECO</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Abas -->
+    <div class="tabs">
+      <img src="logo.png" alt="Logo" class="logo" />
+      <button class="tab active" data-tab="calculo">Cálculo ECO</button>
+      <button class="tab" data-tab="laudo">Laudo ECO</button>
+      <button id="btnRecuperarHistorico" class="tab-recuperar hidden">
+        🕐 Recuperar Histórico
+      </button>
+      <button id="btnLimparTudoTopo" class="tab-limpar-tudo">
+        🗑️ Limpar Tudo
+      </button>
     </div>
 
-    <!-- Colunas principais -->
-    <div class="columns">
-      <!-- ===== COLUNA ESQUERDA: Câmaras Esquerdas ===== -->
-      <div class="column left-column">
-        <h3 class="section-title">Câmaras Esquerdas</h3>
+    <!-- Banner de recuperação de dados -->
+    <div id="recuperacaoBanner" class="recuperacao-banner hidden">
+      <span
+        >⚠️ <strong>Dados do último uso recuperados</strong> —
+        <span id="recuperacaoTime"></span
+      ></span>
+      <button id="btnDescartarRecuperacao" class="btn-descartar-recuperacao">
+        🗑️ Limpar e começar do zero
+      </button>
+    </div>
 
-        <div class="field-row">
-          <label>Aorta:</label>
-          <input type="number" step="0.01" id="aorta" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 27-35mm (mulher) / 31-37mm (homem)</span>
+    <!-- ==================== ABA CÁLCULO ECO ==================== -->
+    <div id="tab-calculo" class="tab-content active">
+      <!-- Peso / Altura / SC -->
+      <div class="header-row body-row">
+        <div class="header-group">
+          <label>Peso:</label>
+          <input type="number" id="peso" step="0.01" class="input-sm" />
+          <span class="unit">Kg</span>
         </div>
-
-        <div class="field-row">
-          <label>Átrio Esquerdo:</label>
-          <input type="number" step="0.01" id="atrioEsquerdo" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 27-38mm (mulher) / 30-40mm (homem)</span>
+        <div class="header-group">
+          <label>Altura:</label>
+          <input type="number" id="altura" step="0.01" class="input-sm" />
+          <span class="unit">m</span>
         </div>
-
-        <div class="field-row">
-          <label>Vol. Átrio Esquerdo:</label>
-          <input type="number" step="0.01" id="volAtrioEsquerdo" class="input-val">
-          <span class="unit">ml</span>
-          <span class="ref">V.Ref.: 22-52mL (mulher) / 18-58mL (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Índice de Vol. Átrio Esquerdo:</b></i></label>
-          <input type="text" id="indVolAtrioEsq" class="input-val calculated" readonly>
-          <span class="unit">ml/m2</span>
-          <span class="ref">V.Ref.: 16-34mL/m2</span>
-        </div>
-
-        <div class="field-row">
-          <label>VE - Diâmetro Diastólico Final:</label>
-          <input type="number" step="0.01" id="ddf" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 37.8-52.2mm (mulher) / 42-58.4mm (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label>VE - Diâmetro Sistólico Final:</label>
-          <input type="number" step="0.01" id="dsf" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 21.6-36.4mm (mulher) / 25-39.8mm (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label>Septo Interventricular:</label>
-          <input type="number" step="0.01" id="septo" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 6-9mm (mulher) / 6-10mm (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label>Espessura Parede Posterior:</label>
-          <input type="number" step="0.01" id="pp" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 6-9mm (mulher) / 6-10mm (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>VE - DDF/SC:</b></i></label>
-          <input type="text" id="ddfSc" class="input-val calculated" readonly>
-          <span class="unit">mm/m2</span>
-          <span class="ref">V.Ref.: 23-31mm/m2 (mulher) / 22-30mm/m2 (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Relação Átrio Esquerdo / Aorta:</b></i></label>
-          <input type="text" id="relAeAorta" class="input-val calculated" readonly>
-          <span class="unit"></span>
-          <span class="ref">V.Ref.: 1.0 ± 0.5</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>VE - Volume Diastólico Final:</b></i></label>
-          <input type="text" id="vdf" class="input-val calculated" readonly>
-          <span class="unit">ml</span>
-          <span class="ref">V.Ref.: 46-106ml (mulher) / 62-150ml (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>VE - VDF/SC:</b></i></label>
-          <input type="text" id="vdfSc" class="input-val calculated" readonly>
-          <span class="unit">ml</span>
-          <span class="ref">V.Ref.: 29-61ml (mulher) / 34-74ml (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>VE - Volume Sistólico Final:</b></i></label>
-          <input type="text" id="vsf" class="input-val calculated" readonly>
-          <span class="unit">ml</span>
-          <span class="ref">V.Ref.: 14-42ml (mulher) / 21-61ml (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Fração de Ejeção (Modo M):</b></i></label>
-          <input type="text" id="feModoM" class="input-val calculated" readonly>
-          <span class="unit">%</span>
-          <span class="ref">V.Ref.: &gt; 55%</span>
-        </div>
-
-        <div class="field-row">
-          <label><i>Fração Ejeção (Biplanar Simpson):</i></label>
-          <input type="number" step="0.01" id="feBiplanar" class="input-val">
-          <span class="unit"></span>
-          <span class="ref">V.Ref.: 54-74% (mulher) / 52-72% (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Fração de Encurtamento - AD:</b></i></label>
-          <input type="text" id="fracEncurt" class="input-val calculated" readonly>
-          <span class="unit">%</span>
-          <span class="ref">V.Ref.: &gt; 30%</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Massa Ventricular Esquerda:</b></i></label>
-          <input type="text" id="massaVE" class="input-val calculated" readonly>
-          <span class="unit">g</span>
-          <span class="ref">V.Ref.: 67-162g (mulher) / 88-224g (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Índice de Massa:</b></i></label>
-          <input type="text" id="indMassa" class="input-val calculated" readonly>
-          <span class="unit">g/m2</span>
-          <span class="ref">V.Ref.: 43-95g/m2 (mulher) / 49-114g/m2 (homem)</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Volume / Massa:</b></i></label>
-          <input type="text" id="volMassa" class="input-val calculated" readonly>
-          <span class="unit">ml/g</span>
-          <span class="ref">V.Ref.: 0.45 - 0.90ml/g</span>
-        </div>
-
-        <div class="field-row">
-          <label class="calc-label"><i><b>Espessura Relativa:</b></i></label>
-          <input type="text" id="espRelativa" class="input-val calculated" readonly>
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 0.22-0.42mm (mulher) / 0.24-0.42mm (homem)</span>
+        <div class="header-group">
+          <label><b>Superfície Corpórea:</b></label>
+          <input type="text" id="bsa" class="input-sm calculated" readonly />
+          <span class="unit">m2</span>
         </div>
       </div>
 
-      <!-- ===== COLUNA DIREITA: Câmaras Direitas + Estudo Doppler ===== -->
-      <div class="column right-column">
-        <h3 class="section-title">Câmaras Direitas</h3>
+      <!-- Colunas principais -->
+      <div class="columns">
+        <!-- ===== COLUNA ESQUERDA: Câmaras Esquerdas ===== -->
+        <div class="column left-column">
+          <h3 class="section-title">Câmaras Esquerdas</h3>
 
-        <div class="field-row">
-          <label>Volume do Átrio Direito:</label>
-          <input type="number" step="0.01" id="volAtrioDireito" class="input-val">
-          <span class="unit">ml</span>
-          <span class="ref"></span>
+          <div class="field-row">
+            <label>Aorta:</label>
+            <input type="number" step="0.01" id="aorta" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 27-35mm (mulher) / 31-37mm (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label>Átrio Esquerdo:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="atrioEsquerdo"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 27-38mm (mulher) / 30-40mm (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label>Vol. Átrio Esquerdo:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="volAtrioEsquerdo"
+              class="input-val"
+            />
+            <span class="unit">ml</span>
+            <span class="ref">V.Ref.: 22-52mL (mulher) / 18-58mL (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Índice de Vol. Átrio Esquerdo:</b></i></label
+            >
+            <input
+              type="text"
+              id="indVolAtrioEsq"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">ml/m2</span>
+            <span class="ref">V.Ref.: 16-34mL/m2</span>
+          </div>
+
+          <div class="field-row">
+            <label>VE - Diâmetro Diastólico Final:</label>
+            <input type="number" step="0.01" id="ddf" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref"
+              >V.Ref.: 37.8-52.2mm (mulher) / 42-58.4mm (homem)</span
+            >
+          </div>
+
+          <div class="field-row">
+            <label>VE - Diâmetro Sistólico Final:</label>
+            <input type="number" step="0.01" id="dsf" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref"
+              >V.Ref.: 21.6-36.4mm (mulher) / 25-39.8mm (homem)</span
+            >
+          </div>
+
+          <div class="field-row">
+            <label>Septo Interventricular:</label>
+            <input type="number" step="0.01" id="septo" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 6-9mm (mulher) / 6-10mm (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label>Espessura Parede Posterior:</label>
+            <input type="number" step="0.01" id="pp" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 6-9mm (mulher) / 6-10mm (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>VE - DDF/SC:</b></i></label
+            >
+            <input
+              type="text"
+              id="ddfSc"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">mm/m2</span>
+            <span class="ref"
+              >V.Ref.: 23-31mm/m2 (mulher) / 22-30mm/m2 (homem)</span
+            >
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Relação Átrio Esquerdo / Aorta:</b></i></label
+            >
+            <input
+              type="text"
+              id="relAeAorta"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit"></span>
+            <span class="ref">V.Ref.: 1.0 ± 0.5</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>VE - Volume Diastólico Final:</b></i></label
+            >
+            <input type="text" id="vdf" class="input-val calculated" readonly />
+            <span class="unit">ml</span>
+            <span class="ref"
+              >V.Ref.: 46-106ml (mulher) / 62-150ml (homem)</span
+            >
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>VE - VDF/SC:</b></i></label
+            >
+            <input
+              type="text"
+              id="vdfSc"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">ml</span>
+            <span class="ref">V.Ref.: 29-61ml (mulher) / 34-74ml (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>VE - Volume Sistólico Final:</b></i></label
+            >
+            <input type="text" id="vsf" class="input-val calculated" readonly />
+            <span class="unit">ml</span>
+            <span class="ref">V.Ref.: 14-42ml (mulher) / 21-61ml (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Fração de Ejeção (Modo M):</b></i></label
+            >
+            <input
+              type="text"
+              id="feModoM"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">%</span>
+            <span class="ref">V.Ref.: &gt; 55%</span>
+          </div>
+
+          <div class="field-row">
+            <label><i>Fração Ejeção (Biplanar Simpson):</i></label>
+            <input
+              type="number"
+              step="0.01"
+              id="feBiplanar"
+              class="input-val"
+            />
+            <span class="unit"></span>
+            <span class="ref">V.Ref.: 54-74% (mulher) / 52-72% (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Fração de Encurtamento - AD:</b></i></label
+            >
+            <input
+              type="text"
+              id="fracEncurt"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">%</span>
+            <span class="ref">V.Ref.: &gt; 30%</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Massa Ventricular Esquerda:</b></i></label
+            >
+            <input
+              type="text"
+              id="massaVE"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">g</span>
+            <span class="ref">V.Ref.: 67-162g (mulher) / 88-224g (homem)</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Índice de Massa:</b></i></label
+            >
+            <input
+              type="text"
+              id="indMassa"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">g/m2</span>
+            <span class="ref"
+              >V.Ref.: 43-95g/m2 (mulher) / 49-114g/m2 (homem)</span
+            >
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Volume / Massa:</b></i></label
+            >
+            <input
+              type="text"
+              id="volMassa"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">ml/g</span>
+            <span class="ref">V.Ref.: 0.45 - 0.90ml/g</span>
+          </div>
+
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Espessura Relativa:</b></i></label
+            >
+            <input
+              type="text"
+              id="espRelativa"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">mm</span>
+            <span class="ref"
+              >V.Ref.: 0.22-0.42mm (mulher) / 0.24-0.42mm (homem)</span
+            >
+          </div>
         </div>
 
-        <div class="field-row">
-          <label class="calc-label"><i><b>Índice de Vol. Átrio Direito:</b></i></label>
-          <input type="text" id="indVolAtrioDir" class="input-val calculated" readonly>
-          <span class="unit">ml/m2</span>
-          <span class="ref">V.Ref.: 9-33ml/m2 (mulher) / 11-39ml/m2 (homem)</span>
-        </div>
+        <!-- ===== COLUNA DIREITA: Câmaras Direitas + Estudo Doppler ===== -->
+        <div class="column right-column">
+          <h3 class="section-title">Câmaras Direitas</h3>
 
-        <div class="field-row">
-          <label>Diâmetro Basal do Ventrículo Direito:</label>
-          <input type="number" step="0.01" id="diamBasalVD" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 25-41mm</span>
-        </div>
+          <div class="field-row">
+            <label>Volume do Átrio Direito:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="volAtrioDireito"
+              class="input-val"
+            />
+            <span class="unit">ml</span>
+            <span class="ref"></span>
+          </div>
 
-        <div class="field-row">
-          <label>Diâmetro Médio do Ventrículo Direito:</label>
-          <input type="number" step="0.01" id="diamMedioVD" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 19-35mm</span>
-        </div>
+          <div class="field-row">
+            <label class="calc-label"
+              ><i><b>Índice de Vol. Átrio Direito:</b></i></label
+            >
+            <input
+              type="text"
+              id="indVolAtrioDir"
+              class="input-val calculated"
+              readonly
+            />
+            <span class="unit">ml/m2</span>
+            <span class="ref"
+              >V.Ref.: 9-33ml/m2 (mulher) / 11-39ml/m2 (homem)</span
+            >
+          </div>
 
-        <div class="field-row">
-          <label>Diâmetro Longitudinal do VD:</label>
-          <input type="number" step="0.01" id="diamLongVD" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 59-83mm</span>
-        </div>
+          <div class="field-row">
+            <label>Diâmetro Basal do Ventrículo Direito:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="diamBasalVD"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 25-41mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>Diâmetro da VSVD Proximal (PET):</label>
-          <input type="number" step="0.01" id="vsvdProximal" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 21-35mm</span>
-        </div>
+          <div class="field-row">
+            <label>Diâmetro Médio do Ventrículo Direito:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="diamMedioVD"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 19-35mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>Espessura da Parede do VD:</label>
-          <input type="number" step="0.01" id="espParedeVD" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: 1-5mm</span>
-        </div>
+          <div class="field-row">
+            <label>Diâmetro Longitudinal do VD:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="diamLongVD"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 59-83mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>TAPSE:</label>
-          <input type="number" step="0.01" id="tapse" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref">V.Ref.: &gt;17mm</span>
-        </div>
+          <div class="field-row">
+            <label>Diâmetro da VSVD Proximal (PET):</label>
+            <input
+              type="number"
+              step="0.01"
+              id="vsvdProximal"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 21-35mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>Onda S Doppler Pulsado:</label>
-          <input type="number" step="0.01" id="ondaSDoppler" class="input-val">
-          <span class="unit">cm/s</span>
-          <span class="ref">V.Ref.: 9.5cm/s</span>
-        </div>
+          <div class="field-row">
+            <label>Espessura da Parede do VD:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="espParedeVD"
+              class="input-val"
+            />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: 1-5mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>Redução da Área Fracional do VD:</label>
-          <input type="number" step="0.01" id="redAreaFrac" class="input-val">
-          <span class="unit">%</span>
-          <span class="ref">V.Ref.: &lt; 35%</span>
-        </div>
+          <div class="field-row">
+            <label>TAPSE:</label>
+            <input type="number" step="0.01" id="tapse" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref">V.Ref.: &gt;17mm</span>
+          </div>
 
-        <div class="field-row">
-          <label>Diâmetro da Veia Cava Inferior:</label>
-          <input type="number" step="0.01" id="diamVCI" class="input-val">
-          <span class="unit">mm</span>
-          <span class="ref"></span>
-        </div>
+          <div class="field-row">
+            <label>Onda S Doppler Pulsado:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="ondaSDoppler"
+              class="input-val"
+            />
+            <span class="unit">cm/s</span>
+            <span class="ref">V.Ref.: 9.5cm/s</span>
+          </div>
 
-        <div class="field-row">
-          <label>Colabamento Insp. da Veia Cava Inferior:</label>
-          <input type="number" step="0.01" id="colabVCI" class="input-val">
-          <span class="unit">%</span>
-          <span class="ref"></span>
-        </div>
+          <div class="field-row">
+            <label>Redução da Área Fracional do VD:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="redAreaFrac"
+              class="input-val"
+            />
+            <span class="unit">%</span>
+            <span class="ref">V.Ref.: &lt; 35%</span>
+          </div>
 
-        <!-- Estudo Doppler -->
-        <h3 class="section-title doppler-title">Estudo Doppler</h3>
+          <div class="field-row">
+            <label>Diâmetro da Veia Cava Inferior:</label>
+            <input type="number" step="0.01" id="diamVCI" class="input-val" />
+            <span class="unit">mm</span>
+            <span class="ref"></span>
+          </div>
 
-        <div class="doppler-header">
-          <span class="doppler-col-label"></span>
-          <span class="doppler-col-header"><b>Velocidade máxima</b></span>
-          <span class="doppler-col-header"><b>Gradiente máximo</b></span>
-        </div>
+          <div class="field-row">
+            <label>Colabamento Insp. da Veia Cava Inferior:</label>
+            <input type="number" step="0.01" id="colabVCI" class="input-val" />
+            <span class="unit">%</span>
+            <span class="ref"></span>
+          </div>
 
-        <div class="field-row doppler-row">
-          <label>Fluxo Aórtico:</label>
-          <input type="number" step="0.01" id="fluxoAortVel" class="input-val">
-          <span class="unit">m/seg</span>
-          <input type="number" step="0.01" id="fluxoAortGrad" class="input-val">
-          <span class="unit">mm hg</span>
-        </div>
+          <!-- Estudo Doppler -->
+          <h3 class="section-title doppler-title">Estudo Doppler</h3>
 
-        <div class="field-row doppler-row">
-          <label>Fluxo Pulmonar:</label>
-          <input type="number" step="0.01" id="fluxoPulmVel" class="input-val">
-          <span class="unit">m/seg</span>
-          <input type="number" step="0.01" id="fluxoPulmGrad" class="input-val">
-          <span class="unit">mm hg</span>
-        </div>
+          <div class="doppler-header">
+            <span class="doppler-col-label"></span>
+            <span class="doppler-col-header"><b>Velocidade máxima</b></span>
+            <span class="doppler-col-header"><b>Gradiente máximo</b></span>
+          </div>
 
-        <div class="field-row">
-          <label>T de Desaceleração (TD):</label>
-          <input type="number" step="0.01" id="tDesaceleracao" class="input-val">
-          <span class="unit">m/seg</span>
-        </div>
+          <div class="field-row doppler-row">
+            <label>Fluxo Aórtico:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="fluxoAortVel"
+              class="input-val"
+            />
+            <span class="unit">m/seg</span>
+            <input
+              type="number"
+              step="0.01"
+              id="fluxoAortGrad"
+              class="input-val"
+            />
+            <span class="unit">mm hg</span>
+          </div>
 
-        <div class="field-row">
-          <label>Relação E/A:</label>
-          <input type="number" step="0.01" id="relEA" class="input-val">
-          <span class="unit"></span>
-        </div>
+          <div class="field-row doppler-row">
+            <label>Fluxo Pulmonar:</label>
+            <input
+              type="number"
+              step="0.01"
+              id="fluxoPulmVel"
+              class="input-val"
+            />
+            <span class="unit">m/seg</span>
+            <input
+              type="number"
+              step="0.01"
+              id="fluxoPulmGrad"
+              class="input-val"
+            />
+            <span class="unit">mm hg</span>
+          </div>
 
-        <div class="field-row">
-          <label>Relação E/e:</label>
-          <input type="number" step="0.01" id="relEe" class="input-val">
-          <span class="unit"></span>
+          <div class="field-row">
+            <label>T de Desaceleração (TD):</label>
+            <input
+              type="number"
+              step="0.01"
+              id="tDesaceleracao"
+              class="input-val"
+            />
+            <span class="unit">m/seg</span>
+          </div>
+
+          <div class="field-row">
+            <label>Relação E/A:</label>
+            <input type="number" step="0.01" id="relEA" class="input-val" />
+            <span class="unit"></span>
+          </div>
+
+          <div class="field-row">
+            <label>Relação E/e:</label>
+            <input type="number" step="0.01" id="relEe" class="input-val" />
+            <span class="unit"></span>
+          </div>
         </div>
+      </div>
+
+      <!-- Botões -->
+      <div class="actions">
+        <button id="btnCopiarMedidas" class="btn-copy">
+          📋 Copiar Medidas
+        </button>
+        <button id="btnCopiarTudo" class="btn-copy btn-tudo">
+          📋 Copiar Tudo (Medidas + Laudo)
+        </button>
+        <button id="btnLimparCalculo" class="btn-clear">
+          🗑️ Limpar Cálculo
+        </button>
       </div>
     </div>
 
-    <!-- Botões -->
-    <div class="actions">
-      <button id="btnCopiarMedidas" class="btn-copy">📋 Copiar Medidas</button>
-      <button id="btnCopiarTudo" class="btn-copy btn-tudo">📋 Copiar Tudo (Medidas + Laudo)</button>
-      <button id="btnLimparCalculo" class="btn-clear">🗑️ Limpar Cálculo</button>
+    <!-- ==================== ABA LAUDO ECO ==================== -->
+    <div id="tab-laudo" class="tab-content">
+      <div class="laudo-header">
+        <h2 class="laudo-titulo">LAUDO</h2>
+      </div>
+      <textarea id="laudoTexto" class="laudo-textarea"></textarea>
+      <div class="actions">
+        <button id="btnCopiarLaudo" class="btn-copy">📋 Copiar Laudo</button>
+        <button id="btnCopiarTudo2" class="btn-copy btn-tudo">
+          📋 Copiar Tudo (Medidas + Laudo)
+        </button>
+        <button id="btnLimparLaudo" class="btn-clear">🗑️ Limpar Laudo</button>
+      </div>
     </div>
-  </div>
 
-  <!-- ==================== ABA LAUDO ECO ==================== -->
-  <div id="tab-laudo" class="tab-content">
-    <div class="laudo-header">
-      <h2 class="laudo-titulo">LAUDO</h2>
-    </div>
-    <textarea id="laudoTexto" class="laudo-textarea"></textarea>
-    <div class="actions">
-      <button id="btnCopiarLaudo" class="btn-copy">📋 Copiar Laudo</button>
-      <button id="btnCopiarTudo2" class="btn-copy btn-tudo">📋 Copiar Tudo (Medidas + Laudo)</button>
-      <button id="btnLimparLaudo" class="btn-clear">🗑️ Limpar Laudo</button>
-    </div>
-  </div>
+    <div id="toast" class="toast hidden">Copiado!</div>
 
-  <div id="toast" class="toast hidden">Copiado!</div>
-
-  <script src="popup.js"></script>
-  
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
