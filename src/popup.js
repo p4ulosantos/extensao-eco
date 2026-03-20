@@ -90,22 +90,84 @@ function initCalculations() {
   const alturaEl = document.getElementById("altura");
   if (alturaEl) {
     alturaEl.dataset.digits = "";
+
+    // Mapa: posição do cursor no display → índice no buffer de dígitos
+    function _altDisplayToDigit(p, n) {
+      if (n === 0) return 0;
+      if (n === 1) return p <= 3 ? 0 : 1; // "0,0d"
+      if (n === 2) return p <= 2 ? 0 : p === 3 ? 1 : 2; // "0,d0d1"
+      return p === 0 ? 0 : p <= 2 ? 1 : p === 3 ? 2 : 3; // "d0,d1d2"
+    }
+
+    // Mapa: índice no buffer de dígitos → posição do cursor no display
+    function _altDigitToDisplay(d, n) {
+      if (n === 0) return 0;
+      if (n === 1) return d === 0 ? 3 : 4;
+      if (n === 2) return d === 0 ? 2 : d === 1 ? 3 : 4;
+      return d === 0 ? 0 : d === 1 ? 2 : d === 2 ? 3 : 4;
+    }
+
     alturaEl.addEventListener("keydown", function (e) {
+      if (["Tab", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key))
+        return;
+      if (e.ctrlKey || e.metaKey) return; // permite Ctrl+A, Ctrl+C, etc.
+
+      e.preventDefault();
+
+      const digits = (this.dataset.digits || "").split("");
+      const n = digits.length;
+      const sStart = this.selectionStart;
+      const sEnd = this.selectionEnd;
+
+      let dcStart = _altDisplayToDigit(sStart, n);
+      let dcEnd = _altDisplayToDigit(sEnd, n);
+
+      let arr = [...digits];
+      let newDc;
+
       if (e.key === "Backspace") {
-        e.preventDefault();
-        this.dataset.digits = this.dataset.digits.slice(0, -1);
-        _renderAltura(this);
-        recalculate();
+        if (dcStart !== dcEnd) {
+          arr.splice(dcStart, dcEnd - dcStart);
+          newDc = dcStart;
+        } else if (dcStart > 0) {
+          arr.splice(dcStart - 1, 1);
+          newDc = dcStart - 1;
+        } else {
+          newDc = 0;
+        }
+      } else if (e.key === "Delete") {
+        if (dcStart !== dcEnd) {
+          arr.splice(dcStart, dcEnd - dcStart);
+          newDc = dcStart;
+        } else if (dcStart < n) {
+          arr.splice(dcStart, 1);
+          newDc = dcStart;
+        } else {
+          newDc = dcStart;
+        }
+      } else if (/^\d$/.test(e.key)) {
+        // Apaga seleção primeiro
+        if (dcStart !== dcEnd) arr.splice(dcStart, dcEnd - dcStart);
+        if (arr.length < 3) {
+          arr.splice(dcStart, 0, e.key);
+          newDc = dcStart + 1;
+        } else {
+          newDc = dcStart;
+        }
+      } else {
         return;
       }
-      if (["Tab", "ArrowLeft", "ArrowRight"].includes(e.key)) return;
-      e.preventDefault();
-      if (/^\d$/.test(e.key) && this.dataset.digits.length < 3) {
-        this.dataset.digits += e.key;
-        _renderAltura(this);
-        recalculate();
-      }
+
+      this.dataset.digits = arr.join("");
+      _renderAltura(this);
+
+      const newN = arr.length;
+      const newPos = _altDigitToDisplay(newDc, newN);
+      this.setSelectionRange(newPos, newPos);
+
+      recalculate();
     });
+
     alturaEl.addEventListener("paste", function (e) {
       e.preventDefault();
       const text = (e.clipboardData || window.clipboardData)
