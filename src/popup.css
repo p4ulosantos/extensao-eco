@@ -29,24 +29,26 @@ body {
   background: linear-gradient(to bottom, #4a6741, #3a5531);
   padding: 0 10px;
   gap: 2px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .tab {
   padding: 8px 22px;
   border: none;
   background: transparent;
-  color: rgba(255,255,255,.75);
+  color: rgba(255, 255, 255, 0.75);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
   border-radius: 0;
-  transition: background .15s, color .15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
   position: relative;
 }
 
 .tab:hover:not(.active) {
-  background: rgba(255,255,255,.1);
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
@@ -60,19 +62,125 @@ body {
 .tab-limpar-tudo {
   margin-left: auto;
   padding: 6px 14px;
-  border: 1px solid rgba(255,255,255,.3);
-  background: rgba(192,57,43,.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(192, 57, 43, 0.85);
   color: #fff;
   cursor: pointer;
   font-size: 11.5px;
   font-weight: 600;
   border-radius: 4px;
   align-self: center;
-  transition: background .15s;
+  transition: background 0.15s;
 }
 
 .tab-limpar-tudo:hover {
-  background: rgba(169,50,38,.95);
+  background: rgba(169, 50, 38, 0.95);
+}
+
+.tab-recuperar {
+  margin-right: 4px;
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(41, 128, 185, 0.85);
+  color: #fff;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 4px;
+  align-self: center;
+  transition: background 0.15s;
+}
+
+.tab-recuperar:hover {
+  background: rgba(31, 97, 141, 0.95);
+}
+
+.tab-recuperar.hidden {
+  display: none;
+}
+
+.recuperacao-banner {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to right, #d35400, #e67e22);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.recuperacao-banner.hidden {
+  display: none;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-descartar-recuperacao {
+  padding: 5px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.btn-descartar-recuperacao:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.btn-fechar-banner {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.btn-fechar-banner:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+@keyframes banner-countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.banner-progress-bar {
+  height: 3px;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.banner-progress-bar.running {
+  animation: banner-countdown 10s linear forwards;
 }
 
 .tab-content {
@@ -121,14 +229,16 @@ input[type="number"] {
   font-size: 12.5px;
   background: #fff;
   border-radius: 3px;
-  transition: border-color .15s, box-shadow .15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
   outline: none;
   border-color: #4a7c4a;
-  box-shadow: 0 0 0 2px rgba(74,124,74,.2);
+  box-shadow: 0 0 0 2px rgba(74, 124, 74, 0.2);
 }
 
 .input-sm {
@@ -168,7 +278,7 @@ input[type="number"]:focus {
   border-radius: 8px;
   padding: 12px 14px;
   border: 1px solid #dde2d4;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .section-title {
@@ -178,7 +288,7 @@ input[type="number"]:focus {
   margin-bottom: 8px;
   padding-bottom: 4px;
   border-bottom: 2px solid #a5d6a7;
-  letter-spacing: .3px;
+  letter-spacing: 0.3px;
 }
 
 .doppler-title {
@@ -194,7 +304,7 @@ input[type="number"]:focus {
   min-height: 26px;
   padding: 1px 4px;
   border-radius: 3px;
-  transition: background .1s;
+  transition: background 0.1s;
 }
 
 .field-row:hover {
@@ -264,20 +374,23 @@ input[type="number"]:focus {
   color: #fff;
   border: none;
   border-radius: 5px;
-  transition: background .15s, box-shadow .15s, transform .1s;
-  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+  transition:
+    background 0.15s,
+    box-shadow 0.15s,
+    transform 0.1s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 .btn-copy:hover,
 .btn-clear:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .btn-copy:active,
 .btn-clear:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .btn-copy {
@@ -330,13 +443,15 @@ input[type="number"]:focus {
   border-radius: 6px;
   resize: vertical;
   background: #fff;
-  transition: border-color .15s, box-shadow .15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .laudo-textarea:focus {
   outline: none;
   border-color: #4a7c4a;
-  box-shadow: 0 0 0 2px rgba(74,124,74,.15);
+  box-shadow: 0 0 0 2px rgba(74, 124, 74, 0.15);
 }
 
 /* ===== Toast ===== */
@@ -350,8 +465,10 @@ input[type="number"]:focus {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(0,0,0,.25);
-  transition: opacity .3s, transform .3s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
   z-index: 9999;
 }
 
