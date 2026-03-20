@@ -7,18 +7,18 @@
   "action": {
     "default_title": "Calculadora ECOCARDIOGRAMA",
     "default_icon": {
-      "16": "src/logo.png",
-      "48": "src/logo.png",
-      "128": "src/logo.png"
+      "16": "src/icon.png",
+      "48": "src/icon.png",
+      "128": "src/icon.png"
     }
   },
   "background": {
     "service_worker": "src/background.js"
   },
   "icons": {
-    "16": "src/logo.png",
-    "48": "src/logo.png",
-    "128": "src/logo.png"
+    "16": "src/icon.png",
+    "48": "src/icon.png",
+    "128": "src/icon.png"
   },
   "options_ui": {
     "page": "src/options.html",

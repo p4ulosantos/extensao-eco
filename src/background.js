@@ -9,7 +9,7 @@ const DEFAULT_MODE = "popup";
 // ---------- Ícone dinâmico via SVG ----------
 async function setDynamicIcon() {
   try {
-    const url = chrome.runtime.getURL("src/icon.svg");
+    const url = chrome.runtime.getURL("src/icon.png");
     const resp = await fetch(url);
     const svg = await resp.text();
     const blob = new Blob([svg], { type: "image/svg+xml" });
