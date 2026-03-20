@@ -15,14 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ===================== MODO DE EXIBIÇÃO =====================
 function initDisplayMode() {
+  // O <script> inline no <head> já definiu html[data-mode] sincronamente.
+  // Aqui refinamos com o valor real do storage e propagamos para o <body>.
   if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get("ecoDisplayMode", (result) => {
       const mode = result.ecoDisplayMode || "popup";
       document.body.dataset.mode = mode;
+      document.documentElement.dataset.mode = mode;
     });
   } else {
-    // Fallback: detectar pelo tamanho da janela
-    document.body.dataset.mode = window.innerWidth < 900 ? "popup" : "tab";
+    const mode = window.innerWidth < 900 ? "popup" : "tab";
+    document.body.dataset.mode = mode;
+    document.documentElement.dataset.mode = mode;
   }
 }
 

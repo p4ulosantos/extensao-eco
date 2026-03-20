@@ -483,11 +483,17 @@ input[type="number"]:focus {
    Layouts de coluna única, espaçamento reduzido
    ============================================================ */
 
+/* Chrome popup dimensiona pela <html>; forçar tamanho explícito */
+html:has(body[data-mode="popup"]),
+html[data-mode="popup"] {
+  width: 780px;
+  height: 600px;
+}
+
 /* ---------- Regras compartilhadas (popup + sidepanel) ---------- */
 body[data-mode="popup"],
 body[data-mode="sidepanel"] {
   min-width: 0;
-  width: 100%;
 }
 
 body[data-mode="popup"] .columns,
@@ -499,20 +505,19 @@ body[data-mode="sidepanel"] .columns {
 body[data-mode="popup"] .field-row,
 body[data-mode="sidepanel"] .field-row {
   flex-wrap: wrap;
-  gap: 3px;
+  gap: 2px 5px;
 }
 
 body[data-mode="popup"] .field-row label,
 body[data-mode="sidepanel"] .field-row label {
-  min-width: 0;
-  flex: 1 1 100%;
+  min-width: 160px;
+  flex: 1 1 auto;
   font-size: 11px;
 }
 
 body[data-mode="popup"] .header-row,
 body[data-mode="sidepanel"] .header-row {
-  flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
@@ -609,7 +614,10 @@ body[data-mode="sidepanel"] .input-val {
 
 /* ---------- Regras específicas do Pop-up ---------- */
 body[data-mode="popup"] {
-  max-width: 620px;
+  width: 780px;
+  min-height: 600px;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 /* ---------- Regras específicas do Painel Lateral ---------- */
