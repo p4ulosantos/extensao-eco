@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Opções — Calculadora ECOCARDIOGRAMA</title>
+    <link rel="stylesheet" href="options.css" />
+    <script>
+      // Aplicar tema antes do primeiro paint
+      (function () {
+        try {
+          if (
+            typeof chrome !== "undefined" &&
+            chrome.storage &&
+            chrome.storage.local
+          ) {
+            chrome.storage.local.get("ecoTheme", function (r) {
+              document.documentElement.dataset.theme = r.ecoTheme || "light";
+            });
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="options-card">
+      <div class="options-header">
+        <img src="logo.png" alt="Logo" class="options-logo" />
+        <h1>Opções da Extensão</h1>
+      </div>
+
+      <section class="options-section">
+        <h2>Modo de Exibição</h2>
+        <p class="options-desc">
+          Escolha como a calculadora será aberta ao clicar no ícone da extensão.
+        </p>
+
+        <label class="radio-option">
+          <input type="radio" name="displayMode" value="popup" />
+          <span class="radio-content">
+            <strong>Pop-up</strong>
+            <small
+              >Abre como janela flutuante compacta sobre a página atual</small
+            >
+          </span>
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" name="displayMode" value="tab" />
+          <span class="radio-content">
+            <strong>Separador (Aba)</strong>
+            <small>Abre em uma nova aba do navegador com layout completo</small>
+          </span>
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" name="displayMode" value="sidepanel" />
+          <span class="radio-content">
+            <strong>Painel Lateral (Side Panel)</strong>
+            <small
+              >Abre no painel lateral nativo do Chrome, ao lado da página</small
+            >
+          </span>
+        </label>
+      </section>
+
+      <section class="options-section options-section--spaced">
+        <h2>Tema</h2>
+        <p class="options-desc">Escolha entre o modo claro e o modo escuro.</p>
+
+        <div class="theme-toggle-row">
+          <span class="theme-label theme-label--light">☀️ Claro</span>
+          <label class="toggle-switch" title="Alternar tema">
+            <input type="checkbox" id="themeToggle" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+          </label>
+          <span class="theme-label theme-label--dark">🌙 Escuro</span>
+        </div>
+      </section>
+
+      <div id="status" class="status hidden"></div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -4,6 +4,31 @@
     <meta charset="UTF-8" />
     <title>Cálculo ECO</title>
     <link rel="stylesheet" href="popup.css" />
+    <script>
+      // Definir modo de exibição e tema ANTES do primeiro paint.
+      (function () {
+        var mode = "tab";
+        try {
+          if (
+            typeof chrome !== "undefined" &&
+            chrome.storage &&
+            chrome.storage.local
+          ) {
+            chrome.storage.local.get(
+              ["ecoDisplayMode", "ecoTheme"],
+              function (r) {
+                var m = r.ecoDisplayMode || "popup";
+                document.body.dataset.mode = m;
+                document.documentElement.dataset.mode = m;
+                var t = r.ecoTheme || "light";
+                document.documentElement.dataset.theme = t;
+              },
+            );
+          }
+        } catch (e) {}
+        document.documentElement.dataset.mode = mode;
+      })();
+    </script>
   </head>
   <body>
     <!-- Abas -->
@@ -12,10 +37,12 @@
       <button class="tab active" data-tab="calculo">Cálculo ECO</button>
       <button class="tab" data-tab="laudo">Laudo ECO</button>
       <button id="btnRecuperarHistorico" class="tab-recuperar hidden">
-        🕐 Recuperar Histórico
-      </button>
-      <button id="btnLimparTudoTopo" class="tab-limpar-tudo">
-        🗑️ Limpar Tudo
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <polyline points="1 4 1 10 7 10"></polyline>
+          <path d="M3.51 15a9 9 0 1 0 .49-4.5"></path>
+          <polyline points="12 7 12 12 15 14"></polyline>
+        </svg>
+        <span class="btn-recuperar-text">Recuperar Histórico</span>
       </button>
     </div>
 
@@ -31,7 +58,7 @@
             id="btnDescartarRecuperacao"
             class="btn-descartar-recuperacao"
           >
-            🗑️ Limpar e começar do zero
+            🗑️ Limpar
           </button>
           <button id="btnFecharBanner" class="btn-fechar-banner" title="Fechar">
             ✕
@@ -52,12 +79,17 @@
         </div>
         <div class="header-group">
           <label>Altura:</label>
-          <input type="number" id="altura" step="0.01" class="input-sm" />
+          <input
+            type="text"
+            id="altura"
+            inputmode="numeric"
+            class="input-sm"
+          />
           <span class="unit">m</span>
         </div>
         <div class="header-group">
           <label><b>Superfície Corpórea:</b></label>
-          <input type="text" id="bsa" class="input-sm calculated" readonly />
+          <input type="text" id="bsa" class="input-sm calculated" disabled />
           <span class="unit">m2</span>
         </div>
       </div>
@@ -107,7 +139,7 @@
               type="text"
               id="indVolAtrioEsq"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">ml/m2</span>
             <span class="ref">V.Ref.: 16-34mL/m2</span>
@@ -153,7 +185,7 @@
               type="text"
               id="ddfSc"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">mm/m2</span>
             <span class="ref"
@@ -169,7 +201,7 @@
               type="text"
               id="relAeAorta"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit"></span>
             <span class="ref">V.Ref.: 1.0 ± 0.5</span>
@@ -179,7 +211,7 @@
             <label class="calc-label"
               ><i><b>VE - Volume Diastólico Final:</b></i></label
             >
-            <input type="text" id="vdf" class="input-val calculated" readonly />
+            <input type="text" id="vdf" class="input-val calculated" disabled />
             <span class="unit">ml</span>
             <span class="ref"
               >V.Ref.: 46-106ml (mulher) / 62-150ml (homem)</span
@@ -194,7 +226,7 @@
               type="text"
               id="vdfSc"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">ml</span>
             <span class="ref">V.Ref.: 29-61ml (mulher) / 34-74ml (homem)</span>
@@ -204,7 +236,7 @@
             <label class="calc-label"
               ><i><b>VE - Volume Sistólico Final:</b></i></label
             >
-            <input type="text" id="vsf" class="input-val calculated" readonly />
+            <input type="text" id="vsf" class="input-val calculated" disabled />
             <span class="unit">ml</span>
             <span class="ref">V.Ref.: 14-42ml (mulher) / 21-61ml (homem)</span>
           </div>
@@ -217,7 +249,7 @@
               type="text"
               id="feModoM"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">%</span>
             <span class="ref">V.Ref.: &gt; 55%</span>
@@ -243,7 +275,7 @@
               type="text"
               id="fracEncurt"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">%</span>
             <span class="ref">V.Ref.: &gt; 30%</span>
@@ -257,7 +289,7 @@
               type="text"
               id="massaVE"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">g</span>
             <span class="ref">V.Ref.: 67-162g (mulher) / 88-224g (homem)</span>
@@ -271,7 +303,7 @@
               type="text"
               id="indMassa"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">g/m2</span>
             <span class="ref"
@@ -287,7 +319,7 @@
               type="text"
               id="volMassa"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">ml/g</span>
             <span class="ref">V.Ref.: 0.45 - 0.90ml/g</span>
@@ -301,7 +333,7 @@
               type="text"
               id="espRelativa"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">mm</span>
             <span class="ref"
@@ -334,7 +366,7 @@
               type="text"
               id="indVolAtrioDir"
               class="input-val calculated"
-              readonly
+              disabled
             />
             <span class="unit">ml/m2</span>
             <span class="ref"
@@ -516,19 +548,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Botões -->
-      <div class="actions">
-        <button id="btnCopiarMedidas" class="btn-copy">
-          📋 Copiar Medidas
-        </button>
-        <button id="btnCopiarTudo" class="btn-copy btn-tudo">
-          📋 Copiar Tudo (Medidas + Laudo)
-        </button>
-        <button id="btnLimparCalculo" class="btn-clear">
-          🗑️ Limpar Cálculo
-        </button>
-      </div>
     </div>
 
     <!-- ==================== ABA LAUDO ECO ==================== -->
@@ -537,14 +556,167 @@
         <h2 class="laudo-titulo">LAUDO</h2>
       </div>
       <textarea id="laudoTexto" class="laudo-textarea"></textarea>
-      <div class="actions">
-        <button id="btnCopiarLaudo" class="btn-copy">📋 Copiar Laudo</button>
-        <button id="btnCopiarTudo2" class="btn-copy btn-tudo">
-          📋 Copiar Tudo (Medidas + Laudo)
-        </button>
-        <button id="btnLimparLaudo" class="btn-clear">🗑️ Limpar Laudo</button>
-      </div>
     </div>
+
+    <!-- ===== Barra de ações fixa (rodapé) ===== -->
+    <footer class="bottom-bar">
+      <!-- Grupo esquerdo: botões de cópia -->
+      <div class="bar-left">
+        <button
+          id="btnCopiarLaudoBar"
+          class="bar-btn bar-btn-copy"
+          title="Copiar Medidas &amp; Laudo"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+            <path
+              d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
+            />
+          </svg>
+          <span>Medidas &amp; Laudo</span>
+        </button>
+      </div>
+
+      <!-- Grupo direito: limpar, alternar modo, tema, configurações -->
+      <div class="bar-right">
+        <button
+          id="btnLimparBar"
+          class="bar-btn bar-btn-destructive"
+          title="Limpar aba atual"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 6h18" />
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+          </svg>
+          <span>Limpar</span>
+        </button>
+
+        <div class="bar-separator" aria-hidden="true"></div>
+
+        <!-- Botões de modo (ícone + tooltip; o modo atual fica oculto) -->
+        <button
+          id="btnModoPopup"
+          class="bar-btn bar-btn-icon bar-btn-mode"
+          title="Modo Pop-up"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="8" y="8" width="13" height="13" rx="2" />
+            <path d="M4 16V4a2 2 0 0 1 2-2h12" />
+          </svg>
+        </button>
+        <button
+          id="btnModoSidepanel"
+          class="bar-btn bar-btn-icon bar-btn-mode"
+          title="Modo Lateral"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="3" width="20" height="18" rx="2" />
+            <line x1="15" y1="3" x2="15" y2="21" />
+          </svg>
+        </button>
+        <button
+          id="btnModoTab"
+          class="bar-btn bar-btn-icon bar-btn-mode"
+          title="Modo Aba"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="2" y="3" width="20" height="18" rx="2" />
+            <path d="M2 9h20" />
+            <path d="M8 3v6" />
+          </svg>
+        </button>
+
+        <div class="bar-separator" aria-hidden="true"></div>
+
+        <!-- Toggle de tema (ícone injetado por JS) -->
+        <button
+          id="btnToggleTema"
+          class="bar-btn bar-btn-icon bar-btn-theme"
+          title="Alternar tema"
+        ></button>
+
+        <!-- Configurações -->
+        <button
+          id="btnConfiguracoes"
+          class="bar-btn bar-btn-icon"
+          title="Configurações"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+      </div>
+    </footer>
 
     <div id="toast" class="toast hidden">Copiado!</div>
 

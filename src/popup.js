@@ -3,14 +3,53 @@
 // ===================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  initDisplayMode();
+  initTheme();
   initTabs();
   initCalculations();
   initCopyButtons();
   initLaudo();
   initClearButton();
+  initBottomBar();
   initRecovery();
   initPersistence();
 });
+
+// ===================== MODO DE EXIBIÇÃO =====================
+function initDisplayMode() {
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("ecoDisplayMode", (result) => {
+      const mode = result.ecoDisplayMode || "popup";
+      document.body.dataset.mode = mode;
+      document.documentElement.dataset.mode = mode;
+      updateModeButtons(mode);
+    });
+  } else {
+    const mode = window.innerWidth < 900 ? "popup" : "tab";
+    document.body.dataset.mode = mode;
+    document.documentElement.dataset.mode = mode;
+    updateModeButtons(mode);
+  }
+}
+
+// ===================== TEMA =====================
+function initTheme() {
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme || "light";
+    updateThemeIcon(theme || "light");
+  }
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("ecoTheme", (result) => {
+      applyTheme(result.ecoTheme || "light");
+    });
+    // Atualiza tema em tempo real quando mudar nas opções
+    chrome.storage.onChanged.addListener((changes) => {
+      if (changes.ecoTheme) {
+        applyTheme(changes.ecoTheme.newValue || "light");
+      }
+    });
+  }
+}
 
 // ===================== ABAS =====================
 function initTabs() {
@@ -33,7 +72,6 @@ function initCalculations() {
   // Todos os inputs que disparam recalculo
   const triggerIds = [
     "peso",
-    "altura",
     "aorta",
     "atrioEsquerdo",
     "volAtrioEsquerdo",
@@ -49,11 +87,105 @@ function initCalculations() {
     if (el) el.addEventListener("input", recalculate);
   });
 
+  const alturaEl = document.getElementById("altura");
+  if (alturaEl) {
+    alturaEl.dataset.digits = "";
+
+    // Mapa: posição do cursor no display → índice no buffer de dígitos
+    function _altDisplayToDigit(p, n) {
+      if (n === 0) return 0;
+      if (n === 1) return p <= 3 ? 0 : 1; // "0,0d"
+      if (n === 2) return p <= 2 ? 0 : p === 3 ? 1 : 2; // "0,d0d1"
+      return p === 0 ? 0 : p <= 2 ? 1 : p === 3 ? 2 : 3; // "d0,d1d2"
+    }
+
+    // Mapa: índice no buffer de dígitos → posição do cursor no display
+    function _altDigitToDisplay(d, n) {
+      if (n === 0) return 0;
+      if (n === 1) return d === 0 ? 3 : 4;
+      if (n === 2) return d === 0 ? 2 : d === 1 ? 3 : 4;
+      return d === 0 ? 0 : d === 1 ? 2 : d === 2 ? 3 : 4;
+    }
+
+    alturaEl.addEventListener("keydown", function (e) {
+      if (["Tab", "ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key))
+        return;
+      if (e.ctrlKey || e.metaKey) return; // permite Ctrl+A, Ctrl+C, etc.
+
+      e.preventDefault();
+
+      const digits = (this.dataset.digits || "").split("");
+      const n = digits.length;
+      const sStart = this.selectionStart;
+      const sEnd = this.selectionEnd;
+
+      let dcStart = _altDisplayToDigit(sStart, n);
+      let dcEnd = _altDisplayToDigit(sEnd, n);
+
+      let arr = [...digits];
+      let newDc;
+
+      if (e.key === "Backspace") {
+        if (dcStart !== dcEnd) {
+          arr.splice(dcStart, dcEnd - dcStart);
+          newDc = dcStart;
+        } else if (dcStart > 0) {
+          arr.splice(dcStart - 1, 1);
+          newDc = dcStart - 1;
+        } else {
+          newDc = 0;
+        }
+      } else if (e.key === "Delete") {
+        if (dcStart !== dcEnd) {
+          arr.splice(dcStart, dcEnd - dcStart);
+          newDc = dcStart;
+        } else if (dcStart < n) {
+          arr.splice(dcStart, 1);
+          newDc = dcStart;
+        } else {
+          newDc = dcStart;
+        }
+      } else if (/^\d$/.test(e.key)) {
+        // Apaga seleção primeiro
+        if (dcStart !== dcEnd) arr.splice(dcStart, dcEnd - dcStart);
+        if (arr.length < 3) {
+          arr.splice(dcStart, 0, e.key);
+          newDc = dcStart + 1;
+        } else {
+          newDc = dcStart;
+        }
+      } else {
+        return;
+      }
+
+      this.dataset.digits = arr.join("");
+      _renderAltura(this);
+
+      const newN = arr.length;
+      const newPos = _altDigitToDisplay(newDc, newN);
+      this.setSelectionRange(newPos, newPos);
+
+      recalculate();
+    });
+
+    alturaEl.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData)
+        .getData("text")
+        .replace(/\D/g, "")
+        .slice(0, 3);
+      this.dataset.digits = text;
+      _renderAltura(this);
+      recalculate();
+    });
+  }
+
   recalculate();
 }
 
 function getNum(id) {
-  const v = parseFloat(document.getElementById(id)?.value);
+  const raw = document.getElementById(id)?.value ?? "";
+  const v = parseFloat(raw.replace(",", "."));
   return isNaN(v) ? 0 : v;
 }
 
@@ -163,16 +295,7 @@ function recalculate() {
 // ===================== COPIAR =====================
 function initCopyButtons() {
   document
-    .getElementById("btnCopiarMedidas")
-    .addEventListener("click", copiarMedidas);
-  document
-    .getElementById("btnCopiarLaudo")
-    .addEventListener("click", copiarLaudo);
-  document
-    .getElementById("btnCopiarTudo")
-    .addEventListener("click", copiarTudo);
-  document
-    .getElementById("btnCopiarTudo2")
+    .getElementById("btnCopiarLaudoBar")
     .addEventListener("click", copiarTudo);
 }
 
@@ -754,12 +877,25 @@ function copiarLaudo() {
 }
 
 // ===================== LIMPAR =====================
+function _renderAltura(el) {
+  const d = el.dataset.digits || "";
+  if (d.length === 0) el.value = "";
+  else if (d.length === 1) el.value = "0,0" + d;
+  else if (d.length === 2) el.value = "0," + d;
+  else el.value = d[0] + "," + d.slice(1);
+}
+
 function limparCalculo() {
   document
     .querySelectorAll('#tab-calculo input[type="number"]')
     .forEach((el) => {
       el.value = "";
     });
+  const alturaEl = document.getElementById("altura");
+  if (alturaEl) {
+    alturaEl.dataset.digits = "";
+    alturaEl.value = "";
+  }
   recalculate();
 }
 
@@ -768,19 +904,122 @@ function limparLaudo() {
 }
 
 function initClearButton() {
-  document
-    .getElementById("btnLimparCalculo")
-    .addEventListener("click", limparCalculo);
-  document
-    .getElementById("btnLimparLaudo")
-    .addEventListener("click", limparLaudo);
-  document.getElementById("btnLimparTudoTopo").addEventListener("click", () => {
-    limparCalculo();
-    limparLaudo();
+  document.getElementById("btnLimparBar").addEventListener("click", () => {
+    const isCalculo = document
+      .getElementById("tab-calculo")
+      .classList.contains("active");
+    if (isCalculo) {
+      limparCalculo();
+    } else {
+      limparLaudo();
+    }
     clearStorage();
     hideRecoveryBanner();
     updateRecuperarBtn();
   });
+}
+
+// ===================== BARRA FIXA — MODOS, TEMA, CONFIG =====================
+
+function updateModeButtons(currentMode) {
+  const map = {
+    popup: "btnModoPopup",
+    sidepanel: "btnModoSidepanel",
+    tab: "btnModoTab",
+  };
+  Object.entries(map).forEach(([mode, id]) => {
+    const btn = document.getElementById(id);
+    if (btn) btn.hidden = mode === currentMode;
+  });
+}
+
+function updateThemeIcon(theme) {
+  const btn = document.getElementById("btnToggleTema");
+  if (!btn) return;
+  const moonSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+  const sunSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+  btn.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+  btn.title =
+    theme === "dark" ? "Alternar para modo claro" : "Alternar para modo escuro";
+}
+
+async function switchMode(newMode) {
+  if (typeof chrome === "undefined" || !chrome.storage) return;
+
+  // Persiste o novo modo
+  await new Promise((res) =>
+    chrome.storage.local.set({ ecoDisplayMode: newMode }, res),
+  );
+
+  // Notifica o background para reconfigurar as APIs do Chrome
+  if (chrome.runtime) {
+    chrome.runtime.sendMessage({ action: "setMode", mode: newMode }, () => {
+      // Suprimir erros de runtime (ex: popup fechou antes da resposta)
+      void chrome.runtime.lastError;
+    });
+  }
+
+  const currentMode = document.body.dataset.mode || "tab";
+
+  if (newMode === "tab") {
+    if (currentMode !== "tab") {
+      chrome.tabs.create({ url: chrome.runtime.getURL("src/popup.html") });
+      window.close();
+    }
+  } else if (newMode === "sidepanel") {
+    try {
+      const win = await new Promise((res) => chrome.windows.getCurrent(res));
+      await chrome.sidePanel.open({ windowId: win.id });
+      setTimeout(() => window.close(), 300);
+    } catch {
+      showToast("Modo Lateral ativado!");
+    }
+  } else if (newMode === "popup") {
+    showToast("Modo Pop-up ativado!");
+    setTimeout(() => window.close(), 2000);
+  }
+}
+
+function initBottomBar() {
+  // Modo
+  document
+    .getElementById("btnModoPopup")
+    .addEventListener("click", () => switchMode("popup"));
+  document
+    .getElementById("btnModoSidepanel")
+    .addEventListener("click", () => switchMode("sidepanel"));
+  document
+    .getElementById("btnModoTab")
+    .addEventListener("click", () => switchMode("tab"));
+
+  // Tema
+  document.getElementById("btnToggleTema").addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme || "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    updateThemeIcon(next);
+    if (
+      typeof chrome !== "undefined" &&
+      chrome.storage &&
+      chrome.storage.local
+    ) {
+      chrome.storage.local.set({ ecoTheme: next });
+    }
+  });
+
+  // Configurações
+  document.getElementById("btnConfiguracoes").addEventListener("click", () => {
+    if (
+      typeof chrome !== "undefined" &&
+      chrome.runtime &&
+      chrome.runtime.openOptionsPage
+    ) {
+      chrome.runtime.openOptionsPage();
+    }
+  });
+
+  // Inicializa ícone do tema conforme estado atual
+  updateThemeIcon(document.documentElement.dataset.theme || "light");
 }
 
 // ===================== PERSISTÊNCIA LOCAL =====================
@@ -878,9 +1117,9 @@ function showRecoveryBanner(timestamp) {
   void bar.offsetWidth; // força reflow para reiniciar a animação CSS
   bar.classList.add("running");
 
-  // Fecha automaticamente após 10 segundos
+  // Fecha automaticamente após 5 segundos
   if (_bannerTimer) clearTimeout(_bannerTimer);
-  _bannerTimer = setTimeout(hideRecoveryBanner, 10000);
+  _bannerTimer = setTimeout(hideRecoveryBanner, 5000);
 }
 
 function hideRecoveryBanner() {
