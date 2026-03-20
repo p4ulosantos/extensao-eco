@@ -16,9 +16,9 @@
   --primary-text: hsl(210, 29%, 24%); /* #2e7d32 */
   /* --primary-text: hsl(123, 47%, 34%); #2e7d32 */
   --destructive: hsl(0, 65%, 45%);
-  --calc-bg: hsl(76, 22%, 87%); /* #e6ecd8 */
+  --calc-bg: hsl(76, 28%, 76%); /* darkened for disabled contrast */
   --calc-fg: hsl(100, 57%, 20%); /* #2d5016 */
-  --calc-border: hsl(90, 22%, 71%); /* #b8c9a0 */
+  --calc-border: hsl(90, 25%, 62%); /* darkened to match */
 }
 
 /* Dark mode — aplicado via data-theme="dark" no <html> */
@@ -250,7 +250,7 @@ body {
 }
 
 .banner-progress-bar.running {
-  animation: banner-countdown 10s linear forwards;
+  animation: banner-countdown 5s linear forwards;
 }
 
 .tab-content {
@@ -327,6 +327,17 @@ input[type="number"]:focus {
   font-weight: bold;
   color: var(--calc-fg);
   border-color: var(--calc-border) !important;
+}
+
+/* Inputs calculados (disabled) — anula estilo padrão do browser */
+input:disabled {
+  opacity: 1;
+  cursor: default;
+  -webkit-text-fill-color: currentColor;
+}
+
+input.calculated:disabled {
+  -webkit-text-fill-color: var(--calc-fg);
 }
 
 .unit {

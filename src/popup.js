@@ -1117,9 +1117,9 @@ function showRecoveryBanner(timestamp) {
   void bar.offsetWidth; // força reflow para reiniciar a animação CSS
   bar.classList.add("running");
 
-  // Fecha automaticamente após 10 segundos
+  // Fecha automaticamente após 5 segundos
   if (_bannerTimer) clearTimeout(_bannerTimer);
-  _bannerTimer = setTimeout(hideRecoveryBanner, 10000);
+  _bannerTimer = setTimeout(hideRecoveryBanner, 5000);
 }
 
 function hideRecoveryBanner() {

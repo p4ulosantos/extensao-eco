@@ -6,6 +6,33 @@
 const STORAGE_MODE_KEY = "ecoDisplayMode";
 const DEFAULT_MODE = "popup";
 
+// ---------- Ícone dinâmico via SVG ----------
+async function setDynamicIcon() {
+  try {
+    const url = chrome.runtime.getURL("src/icon.svg");
+    const resp = await fetch(url);
+    const svg = await resp.text();
+    const blob = new Blob([svg], { type: "image/svg+xml" });
+    const sizes = [16, 48, 128];
+    const imageData = {};
+    for (const size of sizes) {
+      const bmp = await createImageBitmap(blob, {
+        resizeWidth: size,
+        resizeHeight: size,
+        resizeQuality: "high",
+      });
+      const canvas = new OffscreenCanvas(size, size);
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(bmp, 0, 0, size, size);
+      imageData[size] = ctx.getImageData(0, 0, size, size);
+      bmp.close();
+    }
+    await chrome.action.setIcon({ imageData });
+  } catch (e) {
+    // Mantém ícone PNG do manifest como fallback
+  }
+}
+
 // ---------- Aplicar modo ----------
 async function applyMode(mode) {
   if (mode === "popup") {
@@ -41,12 +68,14 @@ chrome.runtime.onInstalled.addListener(async () => {
   // Inicializar modo padrão se não existir
   const mode = await getMode();
   await applyMode(mode);
+  await setDynamicIcon();
 });
 
 // ---------- Startup (re-aplica modo salvo) ----------
 chrome.runtime.onStartup.addListener(async () => {
   const mode = await getMode();
   await applyMode(mode);
+  await setDynamicIcon();
 });
 
 // ---------- Clique no ícone (dispara só quando popup está vazio) ----------
