@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <title>Opções — Calculadora ECOCARDIOGRAMA</title>
     <link rel="stylesheet" href="options.css" />
+    <script>
+      // Aplicar tema antes do primeiro paint
+      (function () {
+        try {
+          if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.get("ecoTheme", function (r) {
+              document.documentElement.dataset.theme = r.ecoTheme || "light";
+            });
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div class="options-card">
@@ -45,6 +57,24 @@
             >
           </span>
         </label>
+      </section>
+
+      <section class="options-section options-section--spaced">
+        <h2>Tema</h2>
+        <p class="options-desc">
+          Escolha entre o modo claro e o modo escuro.
+        </p>
+
+        <div class="theme-toggle-row">
+          <span class="theme-label theme-label--light">☀️ Claro</span>
+          <label class="toggle-switch" title="Alternar tema">
+            <input type="checkbox" id="themeToggle" />
+            <span class="toggle-track">
+              <span class="toggle-thumb"></span>
+            </span>
+          </label>
+          <span class="theme-label theme-label--dark">🌙 Escuro</span>
+        </div>
       </section>
 
       <div id="status" class="status hidden"></div>

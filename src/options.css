@@ -1,5 +1,41 @@
 /* ===== Options Page — Calculadora ECOCARDIOGRAMA ===== */
 
+/* Tokens — Light (padrão) */
+:root {
+  --opt-bg: hsl(60, 11%, 95%);
+  --opt-card: hsl(0, 0%, 100%);
+  --opt-border: hsl(83, 12%, 86%);
+  --opt-border-hover: hsl(123, 35%, 70%);
+  --opt-fg: hsl(210, 29%, 24%);
+  --opt-muted-fg: hsl(183, 5%, 52%);
+  --opt-heading: hsl(123, 47%, 34%);
+  --opt-primary: hsl(175, 70%, 30%);
+  --opt-primary-hover: hsl(175, 70%, 24%);
+  --opt-accent: hsl(83, 20%, 95%);
+  --opt-section-border: hsl(123, 35%, 75%);
+  --opt-status-bg: hsl(175, 70%, 30%);
+  --opt-input-accent: hsl(123, 47%, 34%);
+  --opt-shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* Tokens — Dark */
+[data-theme="dark"] {
+  --opt-bg: hsl(252, 6%, 15%);
+  --opt-card: hsl(252, 7%, 19%);
+  --opt-border: hsl(252, 8%, 27%);
+  --opt-border-hover: hsl(175, 40%, 35%);
+  --opt-fg: hsl(252, 14%, 93%);
+  --opt-muted-fg: hsl(252, 8%, 60%);
+  --opt-heading: hsl(175, 60%, 60%);
+  --opt-primary: hsl(175, 70%, 30%);
+  --opt-primary-hover: hsl(175, 70%, 36%);
+  --opt-accent: hsl(252, 8%, 24%);
+  --opt-section-border: hsl(252, 8%, 27%);
+  --opt-status-bg: hsl(175, 70%, 30%);
+  --opt-input-accent: hsl(175, 60%, 60%);
+  --opt-shadow: rgba(0, 0, 0, 0.35);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -9,21 +45,22 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
-  background: #f5f5f0;
-  color: #2c3e50;
+  background: var(--opt-bg);
+  color: var(--opt-fg);
   display: flex;
   justify-content: center;
   padding: 40px 20px;
+  transition: background 0.2s, color 0.2s;
 }
 
 .options-card {
-  background: #fff;
+  background: var(--opt-card);
   border-radius: 10px;
   padding: 32px 36px;
   max-width: 520px;
   width: 100%;
-  border: 1px solid #dde2d4;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--opt-border);
+  box-shadow: 0 2px 12px var(--opt-shadow);
 }
 
 .options-header {
@@ -32,7 +69,7 @@ body {
   gap: 12px;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #a5d6a7;
+  border-bottom: 2px solid var(--opt-section-border);
 }
 
 .options-logo {
@@ -43,19 +80,25 @@ body {
 .options-header h1 {
   font-size: 18px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--opt-heading);
 }
 
 .options-section h2 {
   font-size: 15px;
   font-weight: 700;
-  color: #34495e;
+  color: var(--opt-fg);
   margin-bottom: 6px;
+}
+
+.options-section--spaced {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--opt-border);
 }
 
 .options-desc {
   font-size: 12.5px;
-  color: #7f8c8d;
+  color: var(--opt-muted-fg);
   margin-bottom: 16px;
 }
 
@@ -66,7 +109,7 @@ body {
   gap: 10px;
   padding: 12px 14px;
   margin-bottom: 8px;
-  border: 1px solid #dde2d4;
+  border: 1px solid var(--opt-border);
   border-radius: 6px;
   cursor: pointer;
   transition:
@@ -75,17 +118,17 @@ body {
 }
 
 .radio-option:hover {
-  background: #f5f8f0;
-  border-color: #a5d6a7;
+  background: var(--opt-accent);
+  border-color: var(--opt-border-hover);
 }
 
 .radio-option input[type="radio"] {
   margin-top: 3px;
-  accent-color: #2e7d32;
+  accent-color: var(--opt-input-accent);
 }
 
 .radio-option input[type="radio"]:checked ~ .radio-content strong {
-  color: #2e7d32;
+  color: var(--opt-heading);
 }
 
 .radio-content {
@@ -96,19 +139,93 @@ body {
 
 .radio-content strong {
   font-size: 13.5px;
-  color: #2c3e50;
+  color: var(--opt-fg);
 }
 
 .radio-content small {
   font-size: 11.5px;
-  color: #7f8c8d;
+  color: var(--opt-muted-fg);
+}
+
+/* ===== Toggle de tema ===== */
+.theme-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.theme-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--opt-muted-fg);
+  transition: color 0.2s;
+}
+
+.theme-label--light {
+  color: var(--opt-fg);
+}
+
+[data-theme="dark"] .theme-label--light {
+  color: var(--opt-muted-fg);
+}
+
+[data-theme="dark"] .theme-label--dark {
+  color: var(--opt-fg);
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.toggle-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  display: block;
+  width: 52px;
+  height: 28px;
+  background: var(--opt-border);
+  border-radius: 14px;
+  position: relative;
+  transition: background 0.25s;
+}
+
+.toggle-switch input:checked + .toggle-track {
+  background: var(--opt-primary);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.25s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.toggle-switch input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(24px);
+}
+
+.toggle-switch:focus-within .toggle-track {
+  outline: 2px solid var(--opt-primary);
+  outline-offset: 2px;
 }
 
 /* Status toast */
 .status {
   margin-top: 16px;
   padding: 10px 16px;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: var(--opt-status-bg);
   color: #fff;
   font-size: 13px;
   font-weight: 600;

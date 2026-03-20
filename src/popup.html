@@ -5,7 +5,7 @@
     <title>Cálculo ECO</title>
     <link rel="stylesheet" href="popup.css" />
     <script>
-      // Definir modo de exibição ANTES do primeiro paint.
+      // Definir modo de exibição e tema ANTES do primeiro paint.
       (function () {
         var mode = "tab";
         try {
@@ -14,10 +14,12 @@
             chrome.storage &&
             chrome.storage.local
           ) {
-            chrome.storage.local.get("ecoDisplayMode", function (r) {
+            chrome.storage.local.get(["ecoDisplayMode", "ecoTheme"], function (r) {
               var m = r.ecoDisplayMode || "popup";
               document.body.dataset.mode = m;
               document.documentElement.dataset.mode = m;
+              var t = r.ecoTheme || "light";
+              document.documentElement.dataset.theme = t;
             });
           }
         } catch (e) {}

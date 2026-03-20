@@ -1,3 +1,44 @@
+/* ===== Design Tokens ===== */
+/* Light mode (padrão) */
+:root {
+  --sidebar-bg: hsl(112, 22%, 28%); /* dark green nav */
+  --bg: hsl(60, 11%, 95%); /* #f5f5f0 */
+  --muted: hsl(83, 22%, 90%); /* #eef2e6 */
+  --card: hsl(0, 0%, 100%); /* #fff */
+  --secondary: hsl(83, 26%, 93%); /* #f0f4ea */
+  --accent: hsl(83, 20%, 95%); /* #f5f8f0 */
+  --border: hsl(83, 12%, 86%); /* #dde2d4 */
+  --fg: hsl(210, 29%, 24%); /* #2c3e50 */
+  --muted-fg: hsl(183, 5%, 52%); /* #7f8c8d */
+  --primary: hsl(175, 70%, 30%); /* #178178 — brand */
+  --primary-hover: hsl(175, 70%, 24%);
+  --primary-text: hsl(123, 47%, 34%); /* #2e7d32 */
+  --destructive: hsl(0, 65%, 45%);
+  --calc-bg: hsl(76, 22%, 87%); /* #e6ecd8 */
+  --calc-fg: hsl(100, 57%, 20%); /* #2d5016 */
+  --calc-border: hsl(90, 22%, 71%); /* #b8c9a0 */
+}
+
+/* Dark mode — aplicado via data-theme="dark" no <html> */
+[data-theme="dark"] {
+  --sidebar-bg: hsl(252, 8%, 11%);
+  --bg: hsl(252, 6%, 15%);
+  --muted: hsl(252, 7%, 18%);
+  --card: hsl(252, 7%, 19%);
+  --secondary: hsl(252, 8%, 22%);
+  --accent: hsl(252, 8%, 24%);
+  --border: hsl(252, 8%, 27%);
+  --fg: hsl(252, 14%, 93%);
+  --muted-fg: hsl(252, 8%, 60%);
+  --primary: hsl(175, 70%, 30%);
+  --primary-hover: hsl(175, 70%, 36%);
+  --primary-text: hsl(175, 60%, 60%);
+  --destructive: hsl(0, 80%, 62%);
+  --calc-bg: hsl(175, 15%, 17%);
+  --calc-fg: hsl(175, 55%, 72%);
+  --calc-border: hsl(175, 25%, 26%);
+}
+
 /* ===== Reset & Base ===== */
 * {
   margin: 0;
@@ -8,8 +49,8 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 12.5px;
-  background: #f5f5f0;
-  color: #2c3e50;
+  background: var(--bg);
+  color: var(--fg);
   min-width: 1060px;
   line-height: 1.4;
 }
@@ -26,17 +67,17 @@ body {
 .tabs {
   display: flex;
   align-items: stretch;
-  background: linear-gradient(to bottom, #4a6741, #3a5531);
+  background: var(--sidebar-bg);
   padding: 0 10px;
   gap: 2px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .tab {
   padding: 8px 22px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.72);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -53,18 +94,19 @@ body {
 }
 
 .tab.active {
-  background: #f5f5f0;
-  color: #2c3e50;
+  background: var(--card);
+  color: var(--fg);
   border-radius: 6px 6px 0 0;
   margin-top: 4px;
+  border-top: 2px solid var(--primary);
 }
 
 .tab-limpar-tudo {
   margin-left: auto;
   padding: 6px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(192, 57, 43, 0.85);
-  color: #fff;
+  border: 1px solid rgba(255, 100, 90, 0.55);
+  background: rgba(180, 40, 30, 0.28);
+  color: rgba(255, 165, 155, 0.95);
   cursor: pointer;
   font-size: 11.5px;
   font-weight: 600;
@@ -74,15 +116,15 @@ body {
 }
 
 .tab-limpar-tudo:hover {
-  background: rgba(169, 50, 38, 0.95);
+  background: rgba(180, 40, 30, 0.5);
 }
 
 .tab-recuperar {
   margin-right: 4px;
   padding: 6px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(41, 128, 185, 0.85);
-  color: #fff;
+  border: 1px solid rgba(23, 170, 160, 0.55);
+  background: rgba(23, 129, 120, 0.22);
+  color: rgba(110, 215, 205, 0.95);
   cursor: pointer;
   font-size: 11.5px;
   font-weight: 600;
@@ -92,7 +134,7 @@ body {
 }
 
 .tab-recuperar:hover {
-  background: rgba(31, 97, 141, 0.95);
+  background: rgba(23, 129, 120, 0.42);
 }
 
 .tab-recuperar.hidden {
@@ -102,12 +144,18 @@ body {
 .recuperacao-banner {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to right, #d35400, #e67e22);
+  background: hsl(38, 80%, 35%);
+  border-bottom: 1px solid hsl(38, 80%, 45%);
   color: #fff;
   font-size: 12.5px;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   overflow: hidden;
+}
+
+[data-theme="dark"] .recuperacao-banner {
+  background: hsl(38, 40%, 16%);
+  border-bottom-color: hsl(38, 60%, 32%);
+  color: hsl(38, 90%, 80%);
 }
 
 .recuperacao-banner.hidden {
@@ -131,9 +179,9 @@ body {
 
 .btn-descartar-recuperacao {
   padding: 5px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: rgba(0, 0, 0, 0.2);
-  color: #fff;
+  border: 1px solid hsl(38, 60%, 38%);
+  background: rgba(0, 0, 0, 0.25);
+  color: hsl(38, 90%, 80%);
   cursor: pointer;
   font-size: 11.5px;
   font-weight: 600;
@@ -142,16 +190,16 @@ body {
 }
 
 .btn-descartar-recuperacao:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .btn-fechar-banner {
   width: 24px;
   height: 24px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  background: rgba(0, 0, 0, 0.15);
-  color: #fff;
+  border: 1px solid hsl(38, 60%, 38%);
+  background: rgba(0, 0, 0, 0.2);
+  color: hsl(38, 90%, 80%);
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
@@ -161,7 +209,7 @@ body {
 }
 
 .btn-fechar-banner:hover {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 @keyframes banner-countdown {
@@ -176,7 +224,8 @@ body {
 .banner-progress-bar {
   height: 3px;
   width: 0%;
-  background: rgba(255, 255, 255, 0.65);
+  background: hsl(38, 92%, 52%);
+  opacity: 0.6;
 }
 
 .banner-progress-bar.running {
@@ -210,24 +259,25 @@ body {
 .header-group label {
   font-weight: 600;
   white-space: nowrap;
-  color: #34495e;
+  color: var(--fg);
 }
 
 .body-row {
   margin-top: 0;
   padding: 10px 14px;
-  background: linear-gradient(to right, #eef2e6, #e8edd8);
+  background: var(--muted);
   border-radius: 6px;
-  border: 1px solid #d5dcc8;
+  border: 1px solid var(--border);
 }
 
 /* ===== Inputs ===== */
 input[type="text"],
 input[type="number"] {
-  border: 1px solid #c0c5b0;
+  border: 1px solid var(--border);
   padding: 4px 6px;
   font-size: 12.5px;
-  background: #fff;
+  background: var(--secondary);
+  color: var(--fg);
   border-radius: 3px;
   transition:
     border-color 0.15s,
@@ -237,8 +287,8 @@ input[type="number"] {
 input[type="text"]:focus,
 input[type="number"]:focus {
   outline: none;
-  border-color: #4a7c4a;
-  box-shadow: 0 0 0 2px rgba(74, 124, 74, 0.2);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px hsla(175, 70%, 30%, 0.3);
 }
 
 .input-sm {
@@ -252,15 +302,15 @@ input[type="number"]:focus {
 }
 
 .calculated {
-  background: #e6ecd8 !important;
+  background: var(--calc-bg) !important;
   font-weight: bold;
-  color: #2d5016;
-  border-color: #b8c9a0 !important;
+  color: var(--calc-fg);
+  border-color: var(--calc-border) !important;
 }
 
 .unit {
   font-size: 11px;
-  color: #7f8c8d;
+  color: var(--muted-fg);
   white-space: nowrap;
 }
 
@@ -274,20 +324,20 @@ input[type="number"]:focus {
 .column {
   flex: 1;
   min-width: 0;
-  background: #fff;
+  background: var(--card);
   border-radius: 8px;
   padding: 12px 14px;
-  border: 1px solid #dde2d4;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .section-title {
   font-size: 13.5px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--primary-text);
   margin-bottom: 8px;
   padding-bottom: 4px;
-  border-bottom: 2px solid #a5d6a7;
+  border-bottom: 2px solid var(--primary);
   letter-spacing: 0.3px;
 }
 
@@ -309,20 +359,20 @@ input[type="number"]:focus {
 }
 
 .field-row:hover {
-  background: #f5f8f0;
+  background: var(--accent);
 }
 
 .field-row label {
   white-space: nowrap;
   font-size: 11.5px;
-  color: #34495e;
+  color: var(--fg);
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .field-row .ref {
   font-size: 10px;
-  color: #95a5a6;
+  color: var(--muted-fg);
   white-space: nowrap;
 }
 
@@ -338,7 +388,7 @@ input[type="number"]:focus {
   gap: 0 5px;
   margin-bottom: 4px;
   padding: 4px;
-  background: #f0f4ea;
+  background: var(--secondary);
   border-radius: 3px;
 }
 
@@ -350,7 +400,7 @@ input[type="number"]:focus {
   font-size: 11px;
   text-align: center;
   grid-column: span 2;
-  color: #2e7d32;
+  color: var(--primary-text);
 }
 
 .doppler-row {
@@ -361,7 +411,7 @@ input[type="number"]:focus {
 .actions {
   margin-top: 14px;
   padding-top: 10px;
-  border-top: 1px solid #dde2d4;
+  border-top: 1px solid var(--border);
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -380,43 +430,44 @@ input[type="number"]:focus {
     background 0.15s,
     box-shadow 0.15s,
     transform 0.1s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .btn-copy:hover,
 .btn-clear:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .btn-copy:active,
 .btn-clear:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .btn-copy {
-  background: #4a7c4a;
+  background: var(--primary);
 }
 
 .btn-copy:hover {
-  background: #3a6a3a;
+  background: var(--primary-hover);
 }
 
 .btn-clear {
-  background: #c0392b;
+  background: var(--destructive);
 }
 
 .btn-clear:hover {
-  background: #a93226;
+  background: hsl(0, 80%, 55%);
 }
 
 .btn-tudo {
-  background: #2980b9;
+  background: hsl(175, 45%, 22%);
+  border: 1px solid var(--primary);
 }
 
 .btn-tudo:hover {
-  background: #2471a3;
+  background: hsl(175, 45%, 28%);
 }
 
 /* ===== Laudo ECO ===== */
@@ -430,7 +481,7 @@ input[type="number"]:focus {
 .laudo-titulo {
   font-size: 22px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--primary-text);
   letter-spacing: 1px;
 }
 
@@ -441,10 +492,11 @@ input[type="number"]:focus {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 13.5px;
   line-height: 1.7;
-  border: 1px solid #c0c5b0;
+  border: 1px solid var(--border);
   border-radius: 6px;
   resize: vertical;
-  background: #fff;
+  background: var(--card);
+  color: var(--fg);
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
@@ -452,8 +504,8 @@ input[type="number"]:focus {
 
 .laudo-textarea:focus {
   outline: none;
-  border-color: #4a7c4a;
-  box-shadow: 0 0 0 2px rgba(74, 124, 74, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px hsla(175, 70%, 30%, 0.25);
 }
 
 /* ===== Toast ===== */
@@ -461,13 +513,13 @@ input[type="number"]:focus {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: var(--primary);
   color: #fff;
   padding: 12px 28px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
   z-index: 9999;
   animation: toast-in 0.3s ease;
 }

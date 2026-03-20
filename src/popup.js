@@ -4,6 +4,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   initDisplayMode();
+  initTheme();
   initTabs();
   initCalculations();
   initCopyButtons();
@@ -25,6 +26,24 @@ function initDisplayMode() {
     const mode = window.innerWidth < 900 ? "popup" : "tab";
     document.body.dataset.mode = mode;
     document.documentElement.dataset.mode = mode;
+  }
+}
+
+// ===================== TEMA =====================
+function initTheme() {
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme || "light";
+  }
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("ecoTheme", (result) => {
+      applyTheme(result.ecoTheme || "light");
+    });
+    // Atualiza tema em tempo real quando mudar nas opções
+    chrome.storage.onChanged.addListener((changes) => {
+      if (changes.ecoTheme) {
+        applyTheme(changes.ecoTheme.newValue || "light");
+      }
+    });
   }
 }
 
