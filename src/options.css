@@ -50,7 +50,9 @@ body {
   display: flex;
   justify-content: center;
   padding: 40px 20px;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .options-card {

@@ -8,7 +8,11 @@
       // Aplicar tema antes do primeiro paint
       (function () {
         try {
-          if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+          if (
+            typeof chrome !== "undefined" &&
+            chrome.storage &&
+            chrome.storage.local
+          ) {
             chrome.storage.local.get("ecoTheme", function (r) {
               document.documentElement.dataset.theme = r.ecoTheme || "light";
             });
@@ -61,9 +65,7 @@
 
       <section class="options-section options-section--spaced">
         <h2>Tema</h2>
-        <p class="options-desc">
-          Escolha entre o modo claro e o modo escuro.
-        </p>
+        <p class="options-desc">Escolha entre o modo claro e o modo escuro.</p>
 
         <div class="theme-toggle-row">
           <span class="theme-label theme-label--light">☀️ Claro</span>

@@ -14,13 +14,16 @@
             chrome.storage &&
             chrome.storage.local
           ) {
-            chrome.storage.local.get(["ecoDisplayMode", "ecoTheme"], function (r) {
-              var m = r.ecoDisplayMode || "popup";
-              document.body.dataset.mode = m;
-              document.documentElement.dataset.mode = m;
-              var t = r.ecoTheme || "light";
-              document.documentElement.dataset.theme = t;
-            });
+            chrome.storage.local.get(
+              ["ecoDisplayMode", "ecoTheme"],
+              function (r) {
+                var m = r.ecoDisplayMode || "popup";
+                document.body.dataset.mode = m;
+                document.documentElement.dataset.mode = m;
+                var t = r.ecoTheme || "light";
+                document.documentElement.dataset.theme = t;
+              },
+            );
           }
         } catch (e) {}
         document.documentElement.dataset.mode = mode;
