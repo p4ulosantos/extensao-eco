@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Cálculo ECO",
+  "description": "Calculadora de medidas de ecocardiograma com geração de laudo",
+  "version": "1.0.0",
+  "permissions": [],
+  "action": {
+    "default_title": "Cálculo ECO"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "icons": {}
+}

@@ -1,0 +1,334 @@
+/* ===== Reset & Base ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  background: #f0eed8;
+  color: #333;
+  min-width: 1060px;
+}
+
+/* ===== Abas ===== */
+.tabs {
+  display: flex;
+  background: #d4d0c0;
+  border-bottom: 1px solid #aaa;
+}
+
+.tab {
+  padding: 5px 16px;
+  border: 1px solid #999;
+  border-bottom: none;
+  background: #d4d0c0;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 2px;
+  border-radius: 3px 3px 0 0;
+}
+
+.tab.active {
+  background: #f0eed8;
+  border-bottom: 1px solid #f0eed8;
+  font-weight: bold;
+}
+
+.tab:hover:not(.active) {
+  background: #e2dfcf;
+}
+
+.tab-limpar-tudo {
+  margin-left: auto;
+  padding: 5px 14px;
+  border: 1px solid #a93226;
+  background: #c0392b;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 3px 3px 0 0;
+  align-self: flex-end;
+}
+
+.tab-limpar-tudo:hover {
+  background: #a93226;
+}
+
+.tab-content {
+  display: none;
+  padding: 8px 12px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ===== Header / Dados do Paciente ===== */
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.header-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-group label {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.header-right {
+  margin-left: auto;
+  border: 1px solid #999;
+  padding: 2px 6px;
+  background: #fff;
+}
+
+.body-row {
+  margin-top: 6px;
+  padding: 4px 0;
+  border-top: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+}
+
+/* ===== Inputs ===== */
+input[type="text"],
+input[type="number"] {
+  border: 1px solid #aaa;
+  padding: 2px 4px;
+  font-size: 12px;
+  background: #fff;
+}
+
+.input-wide {
+  width: 220px;
+}
+
+.input-med {
+  width: 160px;
+}
+
+.input-sm {
+  width: 70px;
+}
+
+.input-val {
+  width: 65px;
+  text-align: right;
+}
+
+.calculated {
+  background: #e8e8d0 !important;
+  font-weight: bold;
+}
+
+.unit {
+  font-size: 11px;
+  color: #555;
+  min-width: 32px;
+  white-space: nowrap;
+}
+
+/* ===== Colunas Principais ===== */
+.columns {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: #006600;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #aaa;
+}
+
+.doppler-title {
+  margin-top: 14px;
+}
+
+/* ===== Linhas de campo ===== */
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+  min-height: 22px;
+}
+
+.field-row label {
+  min-width: 210px;
+  white-space: nowrap;
+  font-size: 11.5px;
+}
+
+.field-row .ref {
+  font-size: 10px;
+  color: #666;
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+.calc-label {
+  font-style: italic;
+}
+
+/* ===== Doppler Header ===== */
+.doppler-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 2px;
+}
+
+.doppler-col-label {
+  min-width: 210px;
+}
+
+.doppler-col-header {
+  font-size: 11px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.doppler-row {
+  flex-wrap: nowrap;
+}
+
+/* ===== Botões ===== */
+.actions {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #aaa;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-copy {
+  padding: 6px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #4a7c4a;
+  color: #fff;
+  border: 1px solid #3a6a3a;
+  border-radius: 3px;
+}
+
+.btn-copy:hover {
+  background: #3a6a3a;
+}
+
+.btn-clear {
+  padding: 6px 18px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #c0392b;
+  color: #fff;
+  border: 1px solid #a93226;
+  border-radius: 3px;
+}
+
+.btn-clear:hover {
+  background: #a93226;
+}
+
+.btn-tudo {
+  background: #2980b9;
+  border-color: #2471a3;
+}
+
+.btn-tudo:hover {
+  background: #2471a3;
+}
+
+.btn-sm {
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid #999;
+  background: #e0ddc8;
+  border-radius: 2px;
+}
+
+.btn-sm:hover {
+  background: #d0cdba;
+}
+
+.btn-danger {
+  color: #c0392b;
+}
+
+/* ===== Laudo ECO ===== */
+.laudo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.laudo-header label {
+  font-weight: bold;
+}
+
+.laudo-header select {
+  padding: 2px 6px;
+  font-size: 12px;
+  min-width: 160px;
+}
+
+.laudo-titulo {
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 30%;
+}
+
+.laudo-textarea {
+  width: 100%;
+  min-height: 500px;
+  padding: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  border: 1px solid #999;
+  resize: vertical;
+  background: #fff;
+}
+
+/* ===== Toast ===== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #2ecc71;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  transition: opacity .3s;
+  z-index: 9999;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
