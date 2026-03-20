@@ -89,17 +89,31 @@ function initCalculations() {
 
   const alturaEl = document.getElementById("altura");
   if (alturaEl) {
-    alturaEl.addEventListener("input", function () {
-      const digits = this.value.replace(/\D/g, "").slice(0, 3);
-      if (digits.length === 0) {
-        this.value = "";
-      } else if (digits.length === 1) {
-        this.value = "0,0" + digits;
-      } else if (digits.length === 2) {
-        this.value = "0," + digits;
-      } else {
-        this.value = digits[0] + "," + digits.slice(1);
+    alturaEl.dataset.digits = "";
+    alturaEl.addEventListener("keydown", function (e) {
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        this.dataset.digits = this.dataset.digits.slice(0, -1);
+        _renderAltura(this);
+        recalculate();
+        return;
       }
+      if (["Tab", "ArrowLeft", "ArrowRight"].includes(e.key)) return;
+      e.preventDefault();
+      if (/^\d$/.test(e.key) && this.dataset.digits.length < 3) {
+        this.dataset.digits += e.key;
+        _renderAltura(this);
+        recalculate();
+      }
+    });
+    alturaEl.addEventListener("paste", function (e) {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData)
+        .getData("text")
+        .replace(/\D/g, "")
+        .slice(0, 3);
+      this.dataset.digits = text;
+      _renderAltura(this);
       recalculate();
     });
   }
@@ -804,12 +818,25 @@ function copiarLaudo() {
 }
 
 // ===================== LIMPAR =====================
+function _renderAltura(el) {
+  const d = el.dataset.digits || "";
+  if (d.length === 0) el.value = "";
+  else if (d.length === 1) el.value = "0,0" + d;
+  else if (d.length === 2) el.value = "0," + d;
+  else el.value = d[0] + "," + d.slice(1);
+}
+
 function limparCalculo() {
   document
     .querySelectorAll('#tab-calculo input[type="number"]')
     .forEach((el) => {
       el.value = "";
     });
+  const alturaEl = document.getElementById("altura");
+  if (alturaEl) {
+    alturaEl.dataset.digits = "";
+    alturaEl.value = "";
+  }
   recalculate();
 }
 
