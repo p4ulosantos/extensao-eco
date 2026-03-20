@@ -5,25 +5,22 @@
     <title>Cálculo ECO</title>
     <link rel="stylesheet" href="popup.css" />
     <script>
-      // Definir modo de exibição ANTES do primeiro paint para dimensionar o popup corretamente.
-      // chrome.storage é async, então usamos a detecção síncrona de contexto como fallback imediato.
+      // Definir modo de exibição ANTES do primeiro paint.
       (function () {
-        var mode = "tab"; // fallback
+        var mode = "tab";
         try {
-          // Em popup/sidepanel a janela é pequena; em tab é grande
-          if (window.innerWidth > 0 && window.innerWidth < 800) mode = "popup";
-          // Refinar via storage assim que possível
           if (
             typeof chrome !== "undefined" &&
             chrome.storage &&
             chrome.storage.local
           ) {
             chrome.storage.local.get("ecoDisplayMode", function (r) {
-              document.body.dataset.mode = r.ecoDisplayMode || mode;
+              var m = r.ecoDisplayMode || "popup";
+              document.body.dataset.mode = m;
+              document.documentElement.dataset.mode = m;
             });
           }
         } catch (e) {}
-        // Aplicar imediatamente no <html> para que o CSS de dimensionamento funcione no primeiro paint
         document.documentElement.dataset.mode = mode;
       })();
     </script>
