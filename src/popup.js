@@ -158,101 +158,227 @@ function formatVal(id) {
   return el.value || '';
 }
 
+// Formata uma linha tabular: "Label:          valor  unidade   V.Ref.: ..."
+// labelW: largura da coluna de label, valW: largura da coluna de valor
+function fmtRow(label, id, unit, ref, labelW = 44, valW = 10) {
+  const val = formatVal(id);
+  const labelCol = (label + ':').padEnd(labelW);
+  const valCol = val.padStart(valW);
+  const unitCol = unit ? ('  ' + unit).padEnd(8) : ''.padEnd(8);
+  const refCol = ref ? '   ' + ref : '';
+  return labelCol + valCol + unitCol + refCol;
+}
+
 function buildMedidasLines() {
   const lines = [];
 
-  lines.push(`Peso: ${formatVal('peso')} Kg | Altura: ${formatVal('altura')} m | Superfície Corpórea: ${formatVal('bsa')} m2`);
+  // --- Dados gerais ---
+  lines.push('Peso:' + formatVal('peso').padStart(12) + '  Kg');
+  lines.push('Altura:' + formatVal('altura').padStart(10) + '  m');
+  lines.push('Superfície Corpórea:' + formatVal('bsa').padStart(8) + '  m2');
   lines.push('');
 
-  lines.push('=== Câmaras Esquerdas ===');
-  const camposEsq = [
-    ['Aorta', 'aorta', 'mm'],
-    ['Átrio Esquerdo', 'atrioEsquerdo', 'mm'],
-    ['Vol. Átrio Esquerdo', 'volAtrioEsquerdo', 'ml'],
-    ['Índice de Vol. Átrio Esquerdo', 'indVolAtrioEsq', 'ml/m2'],
-    ['VE - Diâmetro Diastólico Final', 'ddf', 'mm'],
-    ['VE - Diâmetro Sistólico Final', 'dsf', 'mm'],
-    ['Septo Interventricular', 'septo', 'mm'],
-    ['Espessura Parede Posterior', 'pp', 'mm'],
-    ['VE - DDF/SC', 'ddfSc', 'mm/m2'],
-    ['Relação Átrio Esquerdo / Aorta', 'relAeAorta', ''],
-    ['VE - Volume Diastólico Final', 'vdf', 'ml'],
-    ['VE - VDF/SC', 'vdfSc', 'ml'],
-    ['VE - Volume Sistólico Final', 'vsf', 'ml'],
-    ['Fração de Ejeção (Modo M)', 'feModoM', '%'],
-    ['Fração Ejeção (Biplanar Simpson)', 'feBiplanar', ''],
-    ['Fração de Encurtamento - AD', 'fracEncurt', '%'],
-    ['Massa Ventricular Esquerda', 'massaVE', 'g'],
-    ['Índice de Massa', 'indMassa', 'g/m2'],
-    ['Volume / Massa', 'volMassa', 'ml/g'],
-    ['Espessura Relativa', 'espRelativa', 'mm'],
-  ];
-  camposEsq.forEach(([label, id, unit]) => {
-    const v = formatVal(id);
-    if (v) lines.push(`${label}: ${v} ${unit}`.trim());
-  });
-
+  // --- Câmaras Esquerdas ---
+  lines.push('Câmaras Esquerdas:');
   lines.push('');
-  lines.push('=== Câmaras Direitas ===');
-  const camposDir = [
-    ['Volume do Átrio Direito', 'volAtrioDireito', 'ml'],
-    ['Índice de Vol. Átrio Direito', 'indVolAtrioDir', 'ml/m2'],
-    ['Diâmetro Basal do Ventrículo Direito', 'diamBasalVD', 'mm'],
-    ['Diâmetro Médio do Ventrículo Direito', 'diamMedioVD', 'mm'],
-    ['Diâmetro Longitudinal do VD', 'diamLongVD', 'mm'],
-    ['Diâmetro da VSVD Proximal (PET)', 'vsvdProximal', 'mm'],
-    ['Espessura da Parede do VD', 'espParedeVD', 'mm'],
-    ['TAPSE', 'tapse', 'mm'],
-    ['Onda S Doppler Pulsado', 'ondaSDoppler', 'cm/s'],
-    ['Redução da Área Fracional do VD', 'redAreaFrac', '%'],
-    ['Diâmetro da Veia Cava Inferior', 'diamVCI', 'mm'],
-    ['Colabamento Insp. da Veia Cava Inferior', 'colabVCI', '%'],
-  ];
-  camposDir.forEach(([label, id, unit]) => {
-    const v = formatVal(id);
-    if (v) lines.push(`${label}: ${v} ${unit}`.trim());
-  });
-
+  lines.push(fmtRow('Aorta',                          'aorta',            'mm',    'V. Ref.: 27-35mm (mulher) / 31-37mm (homem)'));
+  lines.push(fmtRow('Átrio Esquerdo',                 'atrioEsquerdo',    'mm',    'V. Ref.: 27-38mm (mulher) / 30-40mm (homem)'));
+  lines.push(fmtRow('Vol. Átrio Esquerdo',            'volAtrioEsquerdo', 'ml',    'V. Ref.: 22-52mL (mulher) / 18-58mL (homem)'));
+  lines.push(fmtRow('Índice de Vol. Átrio Esquerdo',  'indVolAtrioEsq',   'ml/m2', 'V. Ref.: 16-34mL/m2'));
+  lines.push(fmtRow('VE - Diâmetro Diastólico Final', 'ddf',              'mm',    'V. Ref.: 37,8-52,2mm (mulher) / 42-58,4mm (homem)'));
+  lines.push(fmtRow('VE - Diâmetro Sistólico Final',  'dsf',              'mm',    'V. Ref.: 21,6-38,4mm (mulher) / 25-39,8mm (homem)'));
+  lines.push(fmtRow('Septo Interventricular',         'septo',            'mm',    'V. Ref.: 6-9mm (mulher) / 6-10mm (homem)'));
+  lines.push(fmtRow('Espessura Parede Posterior',     'pp',               'mm',    'V. Ref.: 6-9mm (mulher) / 6-10mm (homem)'));
+  lines.push(fmtRow('VE - DDF/SC',                   'ddfSc',            'mm/m2', 'V. Ref.: 23-31mm/m2 (mulher) / 22-30mm/m2 (homem)'));
+  lines.push(fmtRow('Relação Átrio Esquerdo / Aorta', 'relAeAorta',       '',      'V. Ref.: 1.0 +- 0.5'));
+  lines.push(fmtRow('VE - Volume Diastólico Final',   'vdf',              'ml',    'V. Ref.: 46-106ml (mulher) / 62-150ml (homem)'));
+  lines.push(fmtRow('VE - VDF/SC',                   'vdfSc',            'ml',    'V. Ref.: 29-61ml (mulher) / 34-74ml (homem)'));
+  lines.push(fmtRow('VE - Volume Sistólico Final',    'vsf',              'ml',    'V. Ref.: 14-42ml (mulher) / 21-61ml (homem)'));
+  lines.push(fmtRow('Fração de Ejeção (Modo M)',      'feModoM',          '%',     'V. Ref.: > 55%'));
+  lines.push(fmtRow('Fração Ejeção (Biplanar Simpson)','feBiplanar',      '',      'V. Ref.: 54-74% (mulher) / 52-72% (homem)'));
   lines.push('');
-  lines.push('=== Estudo Doppler ===');
-  const fAortVel = formatVal('fluxoAortVel');
+  lines.push(fmtRow('Fração de Encurtamento - AD',    'fracEncurt',       '%',     'V. Ref.: > 30%'));
+  lines.push(fmtRow('Massa Ventricular Esquerda',     'massaVE',          'g',     'V. Ref.: 67-162g (mulher) / 88-224g (homem)'));
+  lines.push(fmtRow('Índice de Massa',                'indMassa',         'g/m2',  'V. Ref.: 43-95g/m2 (mulher) / 49-114g/m2 (homem)'));
+  lines.push(fmtRow('Volume de Massa',                'volMassa',         'ml/g',  'V. Ref.: 0.45 - 0.90ml/g'));
+  lines.push(fmtRow('Espessura Relativa',             'espRelativa',      'mm',    'V. Ref.: 0,22-0,42mm (mulher) / 0,24-0,42mm (homem)'));
+  lines.push('');
+
+  // --- Câmaras Direitas ---
+  lines.push('Câmaras Direitas:');
+  lines.push('');
+  lines.push(fmtRow('Volume do Átrio Direito',                  'volAtrioDireito', 'ml',    ''));
+  lines.push(fmtRow('Índice de Vol. Átrio Direiro',             'indVolAtrioDir',  'ml/m2', 'V. Ref.: 9-33ml/m2 (mulher) / 11-39ml/m2 (homem)'));
+  lines.push(fmtRow('Diâmetro Basal do Ventrículo Direito',     'diamBasalVD',     'mm',    'V. Ref.: 25-41mm'));
+  lines.push(fmtRow('Diâmetro Médio do Ventrículo Direito',     'diamMedioVD',     'mm',    'V. Ref.: 19-35mm'));
+  lines.push(fmtRow('Diâmetro Longitudinal do VD',              'diamLongVD',      'mm',    'V. Ref.: 59-83mm'));
+  lines.push(fmtRow('Diâmetro da VSVD Proximal (PET)',          'vsvdProximal',    'mm',    'V. Ref.: 21-35mm'));
+  lines.push(fmtRow('Espessura da Parede do VD',                'espParedeVD',     'mm',    'V. Ref.: 1-5mm'));
+  lines.push(fmtRow('TAPSE',                                    'tapse',           'mm',    'V. Ref.: >17mm'));
+  lines.push(fmtRow('Onda S Doppler Pulsado',                   'ondaSDoppler',    'cm/s',  ''));
+  lines.push(fmtRow('Redução da Área Fracional do VD',          'redAreaFrac',     '%',     'V. Ref.: < 35%'));
+  lines.push(fmtRow('Diâmetro da Vaia Cava Inferior',           'diamVCI',         'mm',    ''));
+  lines.push(fmtRow('Colabamento Insp. da Veia Cava Inferior',  'colabVCI',        '%',     ''));
+  lines.push('');
+
+  // --- Estudo Doppler ---
+  lines.push('Estudo Doppler:');
+  lines.push('');
+  const pad = n => n.padEnd(24);
+  lines.push(''.padEnd(44) + pad('Velocidade máxima') + 'Gradiente máximo');
+  const fAortVel  = formatVal('fluxoAortVel');
   const fAortGrad = formatVal('fluxoAortGrad');
-  if (fAortVel || fAortGrad) {
-    lines.push(`Fluxo Aórtico: Vel. máx. ${fAortVel} m/seg | Grad. máx. ${fAortGrad} mm hg`);
-  }
-  const fPulmVel = formatVal('fluxoPulmVel');
+  lines.push('Fluxo Aórtico:'.padEnd(44) + (fAortVel  + '  m/seg').padEnd(24) + (fAortGrad ? fAortGrad + '  mm hg' : ''));
+  const fPulmVel  = formatVal('fluxoPulmVel');
   const fPulmGrad = formatVal('fluxoPulmGrad');
-  if (fPulmVel || fPulmGrad) {
-    lines.push(`Fluxo Pulmonar: Vel. máx. ${fPulmVel} m/seg | Grad. máx. ${fPulmGrad} mm hg`);
-  }
-  const camposDoppler = [
-    ['T de Desaceleração (TD)', 'tDesaceleracao', 'm/seg'],
-    ['Relação E/A', 'relEA', ''],
-    ['Relação E/e', 'relEe', ''],
-  ];
-  camposDoppler.forEach(([label, id, unit]) => {
-    const v = formatVal(id);
-    if (v) lines.push(`${label}: ${v} ${unit}`.trim());
-  });
+  lines.push('Fluxo Pulmonar:'.padEnd(44) + (fPulmVel  + '  m/seg').padEnd(24) + (fPulmGrad ? fPulmGrad + '  mm hg' : ''));
+  lines.push(fmtRow('T de Desaceleração (TD)', 'tDesaceleracao', 'm/seg', ''));
+  lines.push(fmtRow('Relação E/A',             'relEA',          '',      ''));
+  lines.push(fmtRow('Relação E/e',             'relEe',          '',      ''));
 
   return lines;
 }
 
+function buildMedidasHtml() {
+  const isCalc = (id) => {
+    const el = document.getElementById(id);
+    return el && (el.readOnly || el.classList.contains('calculated'));
+  };
+
+  const th = (text, extra = '') =>
+    `<th style="padding:4px 8px;border:1px solid #555;background:#222;color:#fff;text-align:left;${extra}">${text}</th>`;
+
+  const sectionRow = (title) =>
+    `<tr><td colspan="4" style="padding:5px 8px;border:1px solid #555;background:#555;color:#fff;font-weight:bold;">${title}</td></tr>`;
+
+  const dataRow = (label, id, unit, ref) => {
+    const val = formatVal(id);
+    const bg = isCalc(id) ? 'background:#f0f0f0;' : '';
+    const vStyle = val ? 'font-weight:bold;' : 'color:#aaa;';
+    return `<tr>
+      <td style="padding:3px 8px;border:1px solid #ccc;${bg}">${label}</td>
+      <td style="padding:3px 8px;border:1px solid #ccc;text-align:right;${bg}${vStyle}">${val || '-'}</td>
+      <td style="padding:3px 8px;border:1px solid #ccc;${bg}">${unit || ''}</td>
+      <td style="padding:3px 8px;border:1px solid #ccc;font-size:10px;color:#555;${bg}">${ref || ''}</td>
+    </tr>`;
+  };
+
+  let h = `<table style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:11px;"><tbody>`;
+
+  // --- Dados Gerais ---
+  h += sectionRow('Dados Gerais');
+  h += dataRow('Peso',               'peso',   'Kg',   '');
+  h += dataRow('Altura',             'altura', 'm',    '');
+  h += dataRow('Superfície Corpórea', 'bsa',   'm²',   '');
+
+  // --- Câmaras Esquerdas ---
+  h += sectionRow('Câmaras Esquerdas');
+  h += dataRow('Aorta',                            'aorta',            'mm',    'V. Ref.: 27-35mm (mulher) / 31-37mm (homem)');
+  h += dataRow('Átrio Esquerdo',                   'atrioEsquerdo',    'mm',    'V. Ref.: 27-38mm (mulher) / 30-40mm (homem)');
+  h += dataRow('Vol. Átrio Esquerdo',              'volAtrioEsquerdo', 'ml',    'V. Ref.: 22-52mL (mulher) / 18-58mL (homem)');
+  h += dataRow('Índice de Vol. Átrio Esquerdo',    'indVolAtrioEsq',   'ml/m²', 'V. Ref.: 16-34mL/m²');
+  h += dataRow('VE - Diâmetro Diastólico Final',   'ddf',              'mm',    'V. Ref.: 37,8-52,2mm (mulher) / 42-58,4mm (homem)');
+  h += dataRow('VE - Diâmetro Sistólico Final',    'dsf',              'mm',    'V. Ref.: 21,6-38,4mm (mulher) / 25-39,8mm (homem)');
+  h += dataRow('Septo Interventricular',           'septo',            'mm',    'V. Ref.: 6-9mm (mulher) / 6-10mm (homem)');
+  h += dataRow('Espessura Parede Posterior',       'pp',               'mm',    'V. Ref.: 6-9mm (mulher) / 6-10mm (homem)');
+  h += dataRow('VE - DDF/SC',                      'ddfSc',            'mm/m²', 'V. Ref.: 23-31mm/m² (mulher) / 22-30mm/m² (homem)');
+  h += dataRow('Relação Átrio Esquerdo / Aorta',   'relAeAorta',       '',      'V. Ref.: 1,0 ± 0,5');
+  h += dataRow('VE - Volume Diastólico Final',     'vdf',              'ml',    'V. Ref.: 46-106ml (mulher) / 62-150ml (homem)');
+  h += dataRow('VE - VDF/SC',                      'vdfSc',            'ml',    'V. Ref.: 29-61ml (mulher) / 34-74ml (homem)');
+  h += dataRow('VE - Volume Sistólico Final',      'vsf',              'ml',    'V. Ref.: 14-42ml (mulher) / 21-61ml (homem)');
+  h += dataRow('Fração de Ejeção (Modo M)',        'feModoM',          '%',     'V. Ref.: > 55%');
+  h += dataRow('Fração Ejeção (Biplanar Simpson)', 'feBiplanar',       '',      'V. Ref.: 54-74% (mulher) / 52-72% (homem)');
+  h += dataRow('Fração de Encurtamento',           'fracEncurt',       '%',     'V. Ref.: > 30%');
+  h += dataRow('Massa Ventricular Esquerda',       'massaVE',          'g',     'V. Ref.: 67-162g (mulher) / 88-224g (homem)');
+  h += dataRow('Índice de Massa',                  'indMassa',         'g/m²',  'V. Ref.: 43-95g/m² (mulher) / 49-114g/m² (homem)');
+  h += dataRow('Volume de Massa',                  'volMassa',         'ml/g',  'V. Ref.: 0,45 - 0,90ml/g');
+  h += dataRow('Espessura Relativa',               'espRelativa',      'mm',    'V. Ref.: 0,22-0,42mm (mulher) / 0,24-0,42mm (homem)');
+
+  // --- Câmaras Direitas ---
+  h += sectionRow('Câmaras Direitas');
+  h += dataRow('Volume do Átrio Direito',                  'volAtrioDireito', 'ml',    '');
+  h += dataRow('Índice de Vol. Átrio Direito',             'indVolAtrioDir',  'ml/m²', 'V. Ref.: 9-33ml/m² (mulher) / 11-39ml/m² (homem)');
+  h += dataRow('Diâmetro Basal do Ventrículo Direito',     'diamBasalVD',     'mm',    'V. Ref.: 25-41mm');
+  h += dataRow('Diâmetro Médio do Ventrículo Direito',     'diamMedioVD',     'mm',    'V. Ref.: 19-35mm');
+  h += dataRow('Diâmetro Longitudinal do VD',              'diamLongVD',      'mm',    'V. Ref.: 59-83mm');
+  h += dataRow('Diâmetro da VSVD Proximal (PET)',          'vsvdProximal',    'mm',    'V. Ref.: 21-35mm');
+  h += dataRow('Espessura da Parede do VD',                'espParedeVD',     'mm',    'V. Ref.: 1-5mm');
+  h += dataRow('TAPSE',                                    'tapse',           'mm',    'V. Ref.: >17mm');
+  h += dataRow('Onda S Doppler Pulsado',                   'ondaSDoppler',    'cm/s',  '');
+  h += dataRow('Redução da Área Fracional do VD',          'redAreaFrac',     '%',     'V. Ref.: < 35%');
+  h += dataRow('Diâmetro da Veia Cava Inferior',           'diamVCI',         'mm',    '');
+  h += dataRow('Colabamento Insp. da Veia Cava Inferior',  'colabVCI',        '%',     '');
+
+  // --- Estudo Doppler ---
+  h += sectionRow('Estudo Doppler');
+  h += dataRow('Fluxo Aórtico — Velocidade máxima',  'fluxoAortVel',      'm/seg', '');
+  h += dataRow('Fluxo Aórtico — Gradiente máximo',   'fluxoAortGrad',     'mm Hg', '');
+  h += dataRow('Fluxo Pulmonar — Velocidade máxima', 'fluxoPulmVel',      'm/seg', '');
+  h += dataRow('Fluxo Pulmonar — Gradiente máximo',  'fluxoPulmGrad',     'mm Hg', '');
+  h += dataRow('T de Desaceleração (TD)',             'tDesaceleracao',    'm/seg', '');
+  h += dataRow('Relação E/A',                         'relEA',             '',      '');
+  h += dataRow('Relação E/e',                         'relEe',             '',      '');
+
+  h += `</tbody></table>`;
+  return h;
+}
+
+function copiarComHtml(htmlContent, plainText, msg) {
+  try {
+    const item = new ClipboardItem({
+      'text/html':  new Blob([htmlContent], { type: 'text/html'  }),
+      'text/plain': new Blob([plainText],   { type: 'text/plain' })
+    });
+    navigator.clipboard.write([item]).then(() => showToast(msg));
+  } catch {
+    // Fallback para plain text se ClipboardItem não estiver disponível
+    navigator.clipboard.writeText(plainText).then(() => showToast(msg));
+  }
+}
+
 function copiarMedidas() {
-  const lines = buildMedidasLines();
-  navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Medidas copiadas!'));
+  copiarComHtml(buildMedidasHtml(), buildMedidasLines().join('\n'), 'Medidas copiadas!');
 }
 
 function copiarTudo() {
-  const lines = buildMedidasLines();
   const laudo = document.getElementById('laudoTexto').value;
-  const texto = lines.join('\n') + '\n\n=== LAUDO ===\n\n' + laudo;
-  navigator.clipboard.writeText(texto).then(() => showToast('Medidas + Laudo copiados!'));
+  const html  = buildMedidasHtml() + `<br><hr><p><strong>LAUDO</strong></p>` + laudoToHtml(laudo);
+  const texto = buildMedidasLines().join('\n') + '\n\n=== LAUDO ===\n\n' + laudo;
+  copiarComHtml(html, texto, 'Medidas + Laudo copiados!');
+}
+
+function laudoToHtml(texto) {
+  const LABELS = [
+    'Ventrículo esquerdo',
+    'Átrio esquerdo',
+    'Aorta ascendente',
+    'Átrio direito e ventrículo direito',
+    'Septos',
+    'Válvula mitral',
+    'Válvula aórtica',
+    'Válvula tricúspide',
+    'Válvula pulmonar',
+    'Artéria Pulmonar',
+    'Pericárdio',
+  ];
+  // Escapar HTML
+  let html = texto
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  // Negrito nos rótulos
+  LABELS.forEach(label => {
+    const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    html = html.replace(new RegExp(escaped + ':', 'g'), `<strong>${label}:</strong>`);
+  });
+  // Quebras de linha
+  html = html.replace(/\n/g, '<br>');
+  return `<p style="font-family:Arial,sans-serif;font-size:13px;line-height:1.6;">${html}</p>`;
 }
 
 function copiarLaudo() {
   const texto = document.getElementById('laudoTexto').value;
-  navigator.clipboard.writeText(texto).then(() => showToast('Laudo copiado!'));
+  copiarComHtml(laudoToHtml(texto), texto, 'Laudo copiado!');
 }
 
 // ===================== LIMPAR =====================

@@ -1,14 +1,23 @@
-{
+﻿{
   "manifest_version": 3,
-  "name": "Cálculo ECO",
-  "description": "Calculadora de medidas de ecocardiograma com geração de laudo",
+  "name": "Calculadora ECOCARDIOGRAMA",
+  "description": "Calculadora de medidas de ecocardiograma com geracao de laudo",
   "version": "1.0.0",
   "permissions": [],
   "action": {
-    "default_title": "Cálculo ECO"
+    "default_title": "Calculadora ECOCARDIOGRAMA",
+    "default_icon": {
+      "16": "src/logo.png",
+      "48": "src/logo.png",
+      "128": "src/logo.png"
+    }
   },
   "background": {
     "service_worker": "src/background.js"
   },
-  "icons": {}
+  "icons": {
+    "16": "src/logo.png",
+    "48": "src/logo.png",
+    "128": "src/logo.png"
+  }
 }
