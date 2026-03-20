@@ -21,13 +21,24 @@
 
     <!-- Banner de recuperação de dados -->
     <div id="recuperacaoBanner" class="recuperacao-banner hidden">
-      <span
-        >⚠️ <strong>Dados do último uso recuperados</strong> —
-        <span id="recuperacaoTime"></span
-      ></span>
-      <button id="btnDescartarRecuperacao" class="btn-descartar-recuperacao">
-        🗑️ Limpar e começar do zero
-      </button>
+      <div class="banner-content">
+        <span
+          >⚠️ <strong>Dados do último uso recuperados</strong> —
+          <span id="recuperacaoTime"></span
+        ></span>
+        <div class="banner-actions">
+          <button
+            id="btnDescartarRecuperacao"
+            class="btn-descartar-recuperacao"
+          >
+            🗑️ Limpar e começar do zero
+          </button>
+          <button id="btnFecharBanner" class="btn-fechar-banner" title="Fechar">
+            ✕
+          </button>
+        </div>
+      </div>
+      <div id="bannerProgressBar" class="banner-progress-bar"></div>
     </div>
 
     <!-- ==================== ABA CÁLCULO ECO ==================== -->

@@ -101,18 +101,32 @@ body {
 
 .recuperacao-banner {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   background: linear-gradient(to right, #d35400, #e67e22);
   color: #fff;
-  padding: 8px 16px;
   font-size: 12.5px;
   font-weight: 500;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 .recuperacao-banner.hidden {
   display: none;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .btn-descartar-recuperacao {
@@ -129,6 +143,44 @@ body {
 
 .btn-descartar-recuperacao:hover {
   background: rgba(0, 0, 0, 0.35);
+}
+
+.btn-fechar-banner {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.btn-fechar-banner:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+@keyframes banner-countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.banner-progress-bar {
+  height: 3px;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.banner-progress-bar.running {
+  animation: banner-countdown 10s linear forwards;
 }
 
 .tab-content {

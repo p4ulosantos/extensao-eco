@@ -865,14 +865,31 @@ function restoreFromStorage(data) {
   recalculate();
 }
 
+let _bannerTimer = null;
+
 function showRecoveryBanner(timestamp) {
   const timeStr = new Date(timestamp).toLocaleString("pt-BR");
   document.getElementById("recuperacaoTime").textContent = timeStr;
   document.getElementById("recuperacaoBanner").classList.remove("hidden");
+
+  // Reinicia a barra de progresso
+  const bar = document.getElementById("bannerProgressBar");
+  bar.classList.remove("running");
+  void bar.offsetWidth; // força reflow para reiniciar a animação CSS
+  bar.classList.add("running");
+
+  // Fecha automaticamente após 10 segundos
+  if (_bannerTimer) clearTimeout(_bannerTimer);
+  _bannerTimer = setTimeout(hideRecoveryBanner, 10000);
 }
 
 function hideRecoveryBanner() {
+  if (_bannerTimer) {
+    clearTimeout(_bannerTimer);
+    _bannerTimer = null;
+  }
   document.getElementById("recuperacaoBanner").classList.add("hidden");
+  document.getElementById("bannerProgressBar").classList.remove("running");
 }
 
 function updateRecuperarBtn() {
@@ -895,6 +912,10 @@ function initRecovery() {
     }
     updateRecuperarBtn();
   }
+
+  document
+    .getElementById("btnFecharBanner")
+    .addEventListener("click", hideRecoveryBanner);
 
   document
     .getElementById("btnDescartarRecuperacao")
