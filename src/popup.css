@@ -477,3 +477,163 @@ input[type="number"]:focus {
   transform: translateY(10px);
   pointer-events: none;
 }
+
+/* ============================================================
+   MODO COMPACTO — Pop-up e Painel Lateral
+   Layouts de coluna única, espaçamento reduzido
+   ============================================================ */
+
+/* ---------- Regras compartilhadas (popup + sidepanel) ---------- */
+body[data-mode="popup"],
+body[data-mode="sidepanel"] {
+  min-width: 0;
+  width: 100%;
+}
+
+body[data-mode="popup"] .columns,
+body[data-mode="sidepanel"] .columns {
+  flex-direction: column;
+  gap: 10px;
+}
+
+body[data-mode="popup"] .field-row,
+body[data-mode="sidepanel"] .field-row {
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+body[data-mode="popup"] .field-row label,
+body[data-mode="sidepanel"] .field-row label {
+  min-width: 0;
+  flex: 1 1 100%;
+  font-size: 11px;
+}
+
+body[data-mode="popup"] .header-row,
+body[data-mode="sidepanel"] .header-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+body[data-mode="popup"] .tabs,
+body[data-mode="sidepanel"] .tabs {
+  flex-wrap: wrap;
+  padding: 4px 6px;
+  gap: 2px;
+}
+
+body[data-mode="popup"] .tab,
+body[data-mode="sidepanel"] .tab {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+body[data-mode="popup"] .logo,
+body[data-mode="sidepanel"] .logo {
+  height: 36px;
+}
+
+body[data-mode="popup"] .tab-limpar-tudo,
+body[data-mode="sidepanel"] .tab-limpar-tudo {
+  font-size: 10.5px;
+  padding: 4px 10px;
+}
+
+body[data-mode="popup"] .tab-recuperar,
+body[data-mode="sidepanel"] .tab-recuperar {
+  font-size: 10.5px;
+  padding: 4px 10px;
+}
+
+body[data-mode="popup"] .section-title,
+body[data-mode="sidepanel"] .section-title {
+  font-size: 12.5px;
+}
+
+body[data-mode="popup"] .tab-content,
+body[data-mode="sidepanel"] .tab-content {
+  padding: 8px 10px 12px;
+}
+
+body[data-mode="popup"] .column,
+body[data-mode="sidepanel"] .column {
+  padding: 8px 10px;
+}
+
+body[data-mode="popup"] .actions,
+body[data-mode="sidepanel"] .actions {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+body[data-mode="popup"] .btn-copy,
+body[data-mode="popup"] .btn-clear,
+body[data-mode="sidepanel"] .btn-copy,
+body[data-mode="sidepanel"] .btn-clear {
+  font-size: 11.5px;
+  padding: 6px 14px;
+}
+
+body[data-mode="popup"] .doppler-header,
+body[data-mode="sidepanel"] .doppler-header {
+  flex-wrap: wrap;
+}
+
+body[data-mode="popup"] .doppler-col-header,
+body[data-mode="sidepanel"] .doppler-col-header {
+  min-width: 80px;
+  font-size: 10px;
+}
+
+body[data-mode="popup"] .doppler-row,
+body[data-mode="sidepanel"] .doppler-row {
+  flex-wrap: wrap;
+}
+
+body[data-mode="popup"] .laudo-textarea,
+body[data-mode="sidepanel"] .laudo-textarea {
+  min-height: 300px;
+  font-size: 12.5px;
+}
+
+body[data-mode="popup"] .body-row,
+body[data-mode="sidepanel"] .body-row {
+  padding: 6px 10px;
+}
+
+body[data-mode="popup"] .input-val,
+body[data-mode="sidepanel"] .input-val {
+  width: 60px;
+}
+
+/* ---------- Regras específicas do Pop-up ---------- */
+body[data-mode="popup"] {
+  max-width: 620px;
+}
+
+/* ---------- Regras específicas do Painel Lateral ---------- */
+body[data-mode="sidepanel"] {
+  max-width: 100%;
+}
+
+body[data-mode="sidepanel"] .field-row label {
+  font-size: 10.5px;
+}
+
+body[data-mode="sidepanel"] .input-val {
+  width: 55px;
+  font-size: 11px;
+}
+
+body[data-mode="sidepanel"] .input-sm {
+  width: 60px;
+}
+
+body[data-mode="sidepanel"] .unit {
+  font-size: 10px;
+}
+
+body[data-mode="sidepanel"] .field-row .ref {
+  font-size: 9px;
+}

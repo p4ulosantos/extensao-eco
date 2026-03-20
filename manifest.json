@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Calculadora ECOCARDIOGRAMA",
   "description": "Calculadora de medidas de ecocardiograma com geracao de laudo",
-  "version": "1.0.0",
-  "permissions": [],
+  "version": "1.1.0",
+  "permissions": ["storage", "sidePanel", "contextMenus"],
   "action": {
     "default_title": "Calculadora ECOCARDIOGRAMA",
     "default_icon": {
@@ -19,5 +19,12 @@
     "16": "src/logo.png",
     "48": "src/logo.png",
     "128": "src/logo.png"
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  },
+  "side_panel": {
+    "default_path": "src/popup.html"
   }
 }

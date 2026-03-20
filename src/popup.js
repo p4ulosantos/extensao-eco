@@ -3,6 +3,7 @@
 // ===================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  initDisplayMode();
   initTabs();
   initCalculations();
   initCopyButtons();
@@ -11,6 +12,19 @@ document.addEventListener("DOMContentLoaded", () => {
   initRecovery();
   initPersistence();
 });
+
+// ===================== MODO DE EXIBIÇÃO =====================
+function initDisplayMode() {
+  if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+    chrome.storage.local.get("ecoDisplayMode", (result) => {
+      const mode = result.ecoDisplayMode || "popup";
+      document.body.dataset.mode = mode;
+    });
+  } else {
+    // Fallback: detectar pelo tamanho da janela
+    document.body.dataset.mode = window.innerWidth < 900 ? "popup" : "tab";
+  }
+}
 
 // ===================== ABAS =====================
 function initTabs() {
