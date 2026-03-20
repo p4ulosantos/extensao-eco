@@ -53,6 +53,7 @@ body {
   color: var(--fg);
   min-width: 1060px;
   line-height: 1.4;
+  padding-bottom: 54px;
 }
 
 /* ===== Logo ===== */
@@ -511,7 +512,7 @@ input[type="number"]:focus {
 /* ===== Toast ===== */
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 62px;
   right: 24px;
   background: var(--primary);
   color: #fff;
@@ -769,4 +770,146 @@ body[data-mode="sidepanel"] .unit {
 
 body[data-mode="sidepanel"] .field-row .ref {
   font-size: 9px;
+}
+
+/* ============================================================
+   BARRA DE AÇÕES FIXA — Rodapé
+   ============================================================ */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sidebar-bg);
+  padding: 0 10px;
+  gap: 8px;
+  z-index: 200;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.bar-left,
+.bar-right {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* — Botão base da barra — */
+.bar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+  transition:
+    background 0.15s,
+    color 0.15s;
+  white-space: nowrap;
+}
+
+.bar-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* — Botões de cópia (destaque teal) — */
+.bar-btn-copy {
+  color: hsl(175, 65%, 72%);
+}
+
+.bar-btn-copy:hover {
+  background: hsla(175, 55%, 30%, 0.45);
+  color: #fff;
+}
+
+/* — Botão destrutivo (limpar) — */
+.bar-btn-destructive {
+  color: hsl(0, 80%, 78%);
+}
+
+.bar-btn-destructive:hover {
+  background: rgba(180, 40, 30, 0.45);
+  color: #fff;
+}
+
+/* — Botões somente ícone — */
+.bar-btn-icon {
+  padding: 0;
+  width: 30px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* — Modo oculto (current mode button) — */
+.bar-btn[hidden] {
+  display: none !important;
+}
+
+/* — Separador vertical — */
+.bar-separator {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+
+/* — Toggle de tema (estilo switch) — */
+.bar-btn-theme {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bar-btn-theme:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+/* dark mode: theme button gets a warm tint to hint "switch to light" */
+[data-theme="dark"] .bar-btn-theme {
+  border-color: hsl(38, 70%, 50%);
+  color: hsl(38, 90%, 75%);
+}
+
+[data-theme="dark"] .bar-btn-theme:hover {
+  background: hsla(38, 60%, 30%, 0.4);
+}
+
+/* — Compact mode adjustments — */
+body[data-mode="popup"] .bottom-bar,
+body[data-mode="sidepanel"] .bottom-bar {
+  height: 40px;
+  padding: 0 6px;
+}
+
+body[data-mode="popup"] .bar-btn,
+body[data-mode="sidepanel"] .bar-btn {
+  height: 26px;
+  font-size: 10.5px;
+  padding: 0 8px;
+  gap: 4px;
+}
+
+body[data-mode="popup"] .bar-btn-icon,
+body[data-mode="sidepanel"] .bar-btn-icon {
+  padding: 0;
+  width: 26px;
+}
+
+body[data-mode="popup"] body,
+body[data-mode="sidepanel"] body {
+  padding-bottom: 48px;
 }

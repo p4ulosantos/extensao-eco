@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCopyButtons();
   initLaudo();
   initClearButton();
+  initBottomBar();
   initRecovery();
   initPersistence();
 });
@@ -21,11 +22,13 @@ function initDisplayMode() {
       const mode = result.ecoDisplayMode || "popup";
       document.body.dataset.mode = mode;
       document.documentElement.dataset.mode = mode;
+      updateModeButtons(mode);
     });
   } else {
     const mode = window.innerWidth < 900 ? "popup" : "tab";
     document.body.dataset.mode = mode;
     document.documentElement.dataset.mode = mode;
+    updateModeButtons(mode);
   }
 }
 
@@ -33,6 +36,7 @@ function initDisplayMode() {
 function initTheme() {
   function applyTheme(theme) {
     document.documentElement.dataset.theme = theme || "light";
+    updateThemeIcon(theme || "light");
   }
   if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get("ecoTheme", (result) => {
@@ -68,7 +72,6 @@ function initCalculations() {
   // Todos os inputs que disparam recalculo
   const triggerIds = [
     "peso",
-    "altura",
     "aorta",
     "atrioEsquerdo",
     "volAtrioEsquerdo",
@@ -84,11 +87,29 @@ function initCalculations() {
     if (el) el.addEventListener("input", recalculate);
   });
 
+  const alturaEl = document.getElementById("altura");
+  if (alturaEl) {
+    alturaEl.addEventListener("input", function () {
+      const digits = this.value.replace(/\D/g, "").slice(0, 3);
+      if (digits.length === 0) {
+        this.value = "";
+      } else if (digits.length === 1) {
+        this.value = "0,0" + digits;
+      } else if (digits.length === 2) {
+        this.value = "0," + digits;
+      } else {
+        this.value = digits[0] + "," + digits.slice(1);
+      }
+      recalculate();
+    });
+  }
+
   recalculate();
 }
 
 function getNum(id) {
-  const v = parseFloat(document.getElementById(id)?.value);
+  const raw = document.getElementById(id)?.value ?? "";
+  const v = parseFloat(raw.replace(",", "."));
   return isNaN(v) ? 0 : v;
 }
 
@@ -198,17 +219,11 @@ function recalculate() {
 // ===================== COPIAR =====================
 function initCopyButtons() {
   document
-    .getElementById("btnCopiarMedidas")
+    .getElementById("btnCopiarMedidasBar")
     .addEventListener("click", copiarMedidas);
   document
-    .getElementById("btnCopiarLaudo")
+    .getElementById("btnCopiarLaudoBar")
     .addEventListener("click", copiarLaudo);
-  document
-    .getElementById("btnCopiarTudo")
-    .addEventListener("click", copiarTudo);
-  document
-    .getElementById("btnCopiarTudo2")
-    .addEventListener("click", copiarTudo);
 }
 
 function showToast(msg) {
@@ -803,19 +818,122 @@ function limparLaudo() {
 }
 
 function initClearButton() {
-  document
-    .getElementById("btnLimparCalculo")
-    .addEventListener("click", limparCalculo);
-  document
-    .getElementById("btnLimparLaudo")
-    .addEventListener("click", limparLaudo);
-  document.getElementById("btnLimparTudoTopo").addEventListener("click", () => {
-    limparCalculo();
-    limparLaudo();
+  document.getElementById("btnLimparBar").addEventListener("click", () => {
+    const isCalculo = document
+      .getElementById("tab-calculo")
+      .classList.contains("active");
+    if (isCalculo) {
+      limparCalculo();
+    } else {
+      limparLaudo();
+    }
     clearStorage();
     hideRecoveryBanner();
     updateRecuperarBtn();
   });
+}
+
+// ===================== BARRA FIXA — MODOS, TEMA, CONFIG =====================
+
+function updateModeButtons(currentMode) {
+  const map = {
+    popup: "btnModoPopup",
+    sidepanel: "btnModoSidepanel",
+    tab: "btnModoTab",
+  };
+  Object.entries(map).forEach(([mode, id]) => {
+    const btn = document.getElementById(id);
+    if (btn) btn.hidden = mode === currentMode;
+  });
+}
+
+function updateThemeIcon(theme) {
+  const btn = document.getElementById("btnToggleTema");
+  if (!btn) return;
+  const moonSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>`;
+  const sunSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>`;
+  btn.innerHTML = theme === "dark" ? sunSvg : moonSvg;
+  btn.title =
+    theme === "dark" ? "Alternar para modo claro" : "Alternar para modo escuro";
+}
+
+async function switchMode(newMode) {
+  if (typeof chrome === "undefined" || !chrome.storage) return;
+
+  // Persiste o novo modo
+  await new Promise((res) =>
+    chrome.storage.local.set({ ecoDisplayMode: newMode }, res),
+  );
+
+  // Notifica o background para reconfigurar as APIs do Chrome
+  if (chrome.runtime) {
+    chrome.runtime.sendMessage({ action: "setMode", mode: newMode }, () => {
+      // Suprimir erros de runtime (ex: popup fechou antes da resposta)
+      void chrome.runtime.lastError;
+    });
+  }
+
+  const currentMode = document.body.dataset.mode || "tab";
+
+  if (newMode === "tab") {
+    if (currentMode !== "tab") {
+      chrome.tabs.create({ url: chrome.runtime.getURL("src/popup.html") });
+      window.close();
+    }
+  } else if (newMode === "sidepanel") {
+    try {
+      const win = await new Promise((res) => chrome.windows.getCurrent(res));
+      await chrome.sidePanel.open({ windowId: win.id });
+      setTimeout(() => window.close(), 300);
+    } catch {
+      showToast("Modo Lateral ativado!");
+    }
+  } else if (newMode === "popup") {
+    showToast("Modo Pop-up ativado!");
+    setTimeout(() => window.close(), 2000);
+  }
+}
+
+function initBottomBar() {
+  // Modo
+  document
+    .getElementById("btnModoPopup")
+    .addEventListener("click", () => switchMode("popup"));
+  document
+    .getElementById("btnModoSidepanel")
+    .addEventListener("click", () => switchMode("sidepanel"));
+  document
+    .getElementById("btnModoTab")
+    .addEventListener("click", () => switchMode("tab"));
+
+  // Tema
+  document.getElementById("btnToggleTema").addEventListener("click", () => {
+    const current = document.documentElement.dataset.theme || "light";
+    const next = current === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    updateThemeIcon(next);
+    if (
+      typeof chrome !== "undefined" &&
+      chrome.storage &&
+      chrome.storage.local
+    ) {
+      chrome.storage.local.set({ ecoTheme: next });
+    }
+  });
+
+  // Configurações
+  document.getElementById("btnConfiguracoes").addEventListener("click", () => {
+    if (
+      typeof chrome !== "undefined" &&
+      chrome.runtime &&
+      chrome.runtime.openOptionsPage
+    ) {
+      chrome.runtime.openOptionsPage();
+    }
+  });
+
+  // Inicializa ícone do tema conforme estado atual
+  updateThemeIcon(document.documentElement.dataset.theme || "light");
 }
 
 // ===================== PERSISTÊNCIA LOCAL =====================

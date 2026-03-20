@@ -59,6 +59,17 @@ chrome.action.onClicked.addListener(async (tab) => {
   // modo "popup" não dispara este evento (Chrome abre o popup automaticamente)
 });
 
+// ---------- Mensagens internas (troca de modo via popup.js) ----------
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+  if (msg.action === "setMode" && msg.mode) {
+    chrome.storage.local.set({ [STORAGE_MODE_KEY]: msg.mode }, async () => {
+      await applyMode(msg.mode);
+      sendResponse({ success: true });
+    });
+    return true; // mantém canal aberto para resposta assíncrona
+  }
+});
+
 // ---------- Menu de contexto ----------
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === "openOptions") {
