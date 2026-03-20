@@ -821,6 +821,8 @@ body[data-mode="sidepanel"] .unit {
   z-index: 200;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+  container-type: inline-size;
+  container-name: bottom-bar;
 }
 
 .bar-left {
@@ -836,11 +838,10 @@ body[data-mode="sidepanel"] .unit {
   gap: 3px;
   flex-shrink: 1;
   min-width: 0;
-  container-type: inline-size;
 }
 
-/* Oculta o texto do Limpar quando bar-right fica comprimido */
-@container (max-width: 200px) {
+/* Oculta o texto do Limpar quando o footer fica estreito (popup/sidepanel) */
+@container bottom-bar (max-width: 500px) {
   .bar-btn-destructive span {
     display: none;
   }
