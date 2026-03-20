@@ -134,6 +134,24 @@ body {
   border-radius: 4px;
   align-self: center;
   transition: background 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  max-width: 180px;
+  white-space: nowrap;
+  flex-shrink: 1;
+}
+
+.tab-recuperar svg {
+  flex-shrink: 0;
+}
+
+.btn-recuperar-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .tab-recuperar:hover {
@@ -642,7 +660,8 @@ body[data-mode="sidepanel"] .header-row {
 
 body[data-mode="popup"] .tabs,
 body[data-mode="sidepanel"] .tabs {
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
   padding: 3px 6px;
   gap: 2px;
 }
@@ -651,11 +670,14 @@ body[data-mode="popup"] .tab,
 body[data-mode="sidepanel"] .tab {
   padding: 4px 10px;
   font-size: 11px;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 body[data-mode="popup"] .logo,
 body[data-mode="sidepanel"] .logo {
   height: 28px;
+  flex-shrink: 0;
 }
 
 body[data-mode="popup"] .tab-limpar-tudo,
@@ -668,6 +690,7 @@ body[data-mode="popup"] .tab-recuperar,
 body[data-mode="sidepanel"] .tab-recuperar {
   font-size: 10px;
   padding: 3px 8px;
+  max-width: 130px;
 }
 
 body[data-mode="popup"] .section-title,
