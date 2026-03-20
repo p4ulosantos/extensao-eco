@@ -823,11 +823,33 @@ body[data-mode="sidepanel"] .unit {
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.bar-left,
+.bar-left {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
 .bar-right {
   display: flex;
   align-items: center;
   gap: 3px;
+  flex-shrink: 1;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Oculta o texto do Limpar quando bar-right fica comprimido */
+@container (max-width: 200px) {
+  .bar-btn-destructive span {
+    display: none;
+  }
+
+  .bar-btn-destructive {
+    padding: 0;
+    width: 30px;
+    justify-content: center;
+  }
 }
 
 /* — Botão base da barra — */
@@ -880,12 +902,25 @@ body[data-mode="sidepanel"] .unit {
 
 /* — Botão destrutivo (limpar) — */
 .bar-btn-destructive {
-  color: hsl(0, 80%, 78%);
+  color: hsl(0, 80%, 80%);
+  background: hsla(0, 70%, 38%, 0.45);
+  border: 1px solid hsl(0, 60%, 50%);
 }
 
 .bar-btn-destructive:hover {
-  background: rgba(180, 40, 30, 0.45);
+  background: hsla(0, 72%, 42%, 0.7);
+  border-color: hsl(0, 65%, 60%);
   color: #fff;
+}
+
+[data-theme="dark"] .bar-btn-destructive {
+  background: hsla(0, 65%, 30%, 0.5);
+  border-color: hsl(0, 55%, 42%);
+}
+
+[data-theme="dark"] .bar-btn-destructive:hover {
+  background: hsla(0, 68%, 35%, 0.75);
+  border-color: hsl(0, 60%, 52%);
 }
 
 /* — Botões somente ícone — */

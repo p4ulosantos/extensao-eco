@@ -295,11 +295,8 @@ function recalculate() {
 // ===================== COPIAR =====================
 function initCopyButtons() {
   document
-    .getElementById("btnCopiarMedidasBar")
-    .addEventListener("click", copiarMedidas);
-  document
     .getElementById("btnCopiarLaudoBar")
-    .addEventListener("click", copiarLaudo);
+    .addEventListener("click", copiarTudo);
 }
 
 function showToast(msg) {
