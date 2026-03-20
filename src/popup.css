@@ -2,7 +2,7 @@
 /* Light mode (padrão) */
 :root {
   /* --sidebar-bg: hsl(112, 22%, 28%); dark green nav */
-  --sidebar-bg: hsl(175, 70%, 30%); 
+  --sidebar-bg: hsl(175, 70%, 30%);
   --bg: hsl(60, 11%, 95%); /* #f5f5f0 */
   --muted: hsl(83, 22%, 90%); /* #eef2e6 */
   --card: hsl(0, 0%, 100%); /* #fff */
@@ -591,14 +591,47 @@ body[data-mode="sidepanel"] .field-row {
   min-height: 22px;
   padding: 0 3px;
   margin-bottom: 0;
+  position: relative;
 }
 
 body[data-mode="sidepanel"] .field-row label {
   font-size: 10.5px;
 }
 
+/* Ref como tooltip flutuante no modo sidepanel */
 body[data-mode="sidepanel"] .field-row .ref {
-  display: none;
+  display: block;
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 0;
+  z-index: 150;
+  background: hsl(210, 29%, 16%);
+  color: hsl(60, 11%, 95%);
+  font-size: 10px;
+  font-weight: 500;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid hsl(175, 30%, 35%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.15s,
+    visibility 0.15s;
+}
+
+[data-theme="dark"] body[data-mode="sidepanel"] .field-row .ref {
+  background: hsl(252, 8%, 10%);
+  color: hsl(252, 14%, 90%);
+  border-color: hsl(175, 25%, 30%);
+}
+
+body[data-mode="sidepanel"] .field-row:hover .ref,
+body[data-mode="sidepanel"] .field-row:focus-within .ref {
+  opacity: 1;
+  visibility: visible;
 }
 
 body[data-mode="popup"] .header-row,
@@ -770,10 +803,6 @@ body[data-mode="sidepanel"] .unit {
   font-size: 10px;
 }
 
-body[data-mode="sidepanel"] .field-row .ref {
-  font-size: 9px;
-}
-
 /* ============================================================
    BARRA DE AÇÕES FIXA — Rodapé
    ============================================================ */
@@ -829,12 +858,24 @@ body[data-mode="sidepanel"] .field-row .ref {
 /* — Botões de cópia (destaque teal) — */
 .bar-btn-copy {
   color: #fff;
-  /* color: hsl(175, 65%, 72%); */
+  background: hsl(175, 62%, 44%);
+  border: 1px solid hsl(175, 65%, 62%);
 }
 
 .bar-btn-copy:hover {
-  background: hsla(175, 55%, 30%, 0.45);
+  background: hsl(175, 65%, 52%);
+  border-color: hsl(175, 70%, 70%);
   color: #fff;
+}
+
+[data-theme="dark"] .bar-btn-copy {
+  background: hsl(175, 45%, 22%);
+  border-color: hsl(175, 52%, 40%);
+}
+
+[data-theme="dark"] .bar-btn-copy:hover {
+  background: hsl(175, 50%, 28%);
+  border-color: hsl(175, 56%, 50%);
 }
 
 /* — Botão destrutivo (limpar) — */
